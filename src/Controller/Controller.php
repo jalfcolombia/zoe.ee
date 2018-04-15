@@ -1,5 +1,4 @@
 <?php
-
 namespace ZoeEE\Controller;
 
 use ZoeEE\Cache\Cache;
@@ -12,41 +11,52 @@ use ZoeEE\Routing\Routing;
 abstract class Controller
 {
 
-  /**
-   * Objeto para manejar el caché del sistema
-   * 
-   * @var Cache
-   */
-  private $cache;
-  private $view;
+    /**
+     * Objeto para manejar el caché del sistema
+     *
+     * @var Cache
+     */
+    private $cache;
 
-  abstract function Main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
+    private $view;
 
-  public function __construct(Cache $cache)
-  {
-    $this->cache = $cache;
-    $this->view  = null;
-  }
+    abstract function Main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
 
-  /**
-   * Devuelve el objeto para manejar el caché del sistema
-   * 
-   * @return Cache
-   */
-  protected function GetCache(): Cache
-  {
-    return $this->cache;
-  }
+    public function __construct(Cache $cache)
+    {
+        $this->cache = $cache;
+        $this->view = null;
+    }
 
-  protected function ChangeView(string $view): Controller
-  {
-    $this->view = $view;
-    return $this;
-  }
+    /**
+     * Devuelve el objeto para manejar el caché del sistema
+     *
+     * @return Cache
+     */
+    protected function GetCache(): Cache
+    {
+        return $this->cache;
+    }
 
-  public function GetView(): ?string
-  {
-    return $this->view;
-  }
+    /**
+     * Cambia la vista predeterminada en el routing
+     *
+     * @param string $view
+     * @return Controller
+     */
+    protected function ChangeView(string $view): Controller
+    {
+        $this->view = $view;
+        return $this;
+    }
 
+    /**
+     * Devuelve la vista asignada desde el controlador
+     *
+     * @return string|NULL
+     */
+    public function GetView(): ?string
+    {
+        return $this->view;
+    }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace ZoeEE\Middleware\Interfaces;
 
 use ZoeEE\Request\Request;
@@ -13,5 +12,6 @@ use ZoeEE\Routing\Routing;
  */
 interface IntfcMiddleware
 {
-  public function Main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
+
+    public function Main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
 }
