@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the ZoeEE package.
+ *
+ * (c) Julian Lasso <jalasso69@misena.edu.co>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ZoeEE\Routing;
 
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -10,8 +19,8 @@ use ZoeEE\ExceptionHandler\ZOEException;
 
 /**
  * Clase para controlar el sistema de rutas basado en un arhchivo YAML
- * 
- * 
+ *
+ *
  * @author Julian Andres Lasso Figueroa <jalasso69@misena.edu.co>
  * @package ZoEE\Routing
  */
@@ -21,7 +30,7 @@ class Routing
     private const NAME_CACHE = 'zoeRouting';
 
     /**
-     * Dirección y nombre de archivo en la cachÃ©
+     * Dirección y nombre de archivo en la caché
      */
     private const CACHE = 'Confing' . DIRECTORY_SEPARATOR . 'Routing';
 
@@ -29,6 +38,11 @@ class Routing
      * Dirección y nombre del archivo YAML
      */
     private const YAML = 'Config' . DIRECTORY_SEPARATOR . 'Routing.yml';
+
+    /**
+     * Nombre del folder donde se encuentran los paquetes del sistema
+     */
+    private const BUNDLE = 'Bundle' . DIRECTORY_SEPARATOR;
 
     /**
      * Campo de aplicación de desarrollo
@@ -46,7 +60,7 @@ class Routing
     private const TEST = 'test';
 
     /**
-     * Objeto para manejar el cachÃ© del sistema
+     * Objeto para manejar el caché del sistema
      *
      * @var Cache
      */
@@ -64,7 +78,7 @@ class Routing
      *
      * @var array
      */
-    public $route;
+    private $route;
 
     /**
      * Arreglo asociativo con los parámetos pasados por la URL
@@ -97,11 +111,15 @@ class Routing
 
     /**
      * Constructor de la clase Routing
-     * 
-     * @param string $path Ruta a la que se intenta acceder
-     * @param Cache $cache Objeto para manejar los archivos de la caché
-     * @param string $path_proyect Ruta del proyecto físico en el servidor
-     * @param string $scope Campo de aplicación del sistema (dev, prod o test)
+     *
+     * @param string $path
+     *            Ruta a la que se intenta acceder
+     * @param Cache $cache
+     *            Objeto para manejar los archivos de la caché
+     * @param string $path_proyect
+     *            Ruta del proyecto físico en el servidor
+     * @param string $scope
+     *            Campo de aplicación del sistema (dev, prod o test)
      */
     public function __construct(string $path, Cache $cache, string $path_proyect, string $scope = self::DEV)
     {
@@ -115,8 +133,25 @@ class Routing
     }
 
     /**
-     * Resuelve la ruta provista
+     * Remplaza la ultima aparición en una cadena de texto
      * 
+     * @param string $search
+     * @param string $replace
+     * @param string $string
+     * @return string
+     */
+    private function str_replace_last(string $search, string $replace, string $string): string
+    {
+        $pos = strrpos($string, $search);
+        if ($pos !== false) {
+            $string = substr_replace($string, $replace, $pos, strlen($search));
+        }
+        return $string;
+    }
+
+    /**
+     * Resuelve la ruta provista
+     *
      * @throws ZOEException
      * @return bool Verdadero si encontró una ruta en caso contrario devolverá Falso
      */
@@ -124,21 +159,22 @@ class Routing
     {
         $routings = $this->getRoutingFile();
         foreach ($routings as $routing => $detail) {
-            if (strpos($detail['path'], ':') !== false) {
-                
+            $originalPath = $this->path;
+            $yamlPath = $detail['path'];
+            if (strpos($yamlPath, ':') !== false) {
                 $arrayPath = $arrayRoute = array();
-                if (strpos($detail['path'], '.') !== false) {
-                    $arrayRoute = explode('.', $detail['path']);
-                    $arrayPath = explode('.', $this->path);
-                    $detail['path'] = substr($detail['path'], 0, strrpos($detail['path'], '.'));
-                    $this->path = substr($this->path, 0, strrpos($this->path, '.'));
+                if (strrpos($yamlPath, '.') !== false) {
+                    $yamlPath = $this->str_replace_last('.', '|', $yamlPath);
+                    $originalPath = $this->str_replace_last('.', '|', $originalPath);
+                    $arrayRoute = explode('|', $yamlPath);
+                    $arrayPath = explode('|', $originalPath);
+                    $yamlPath = substr($yamlPath, 0, strrpos($yamlPath, '|'));
+                    $originalPath = substr($this->path, 0, strrpos($originalPath, '|'));
                     unset($arrayPath[0], $arrayRoute[0]);
                 }
-
-                $arrayRoute = array_merge(explode('/', $detail['path']), $arrayRoute);
-                $arrayPath = array_merge(explode('/', $this->path), $arrayPath);
+                $arrayRoute = array_merge(explode('/', $yamlPath), $arrayRoute);
+                $arrayPath = array_merge(explode('/', $originalPath), $arrayPath);
                 unset($arrayPath[0], $arrayRoute[0]);
-
                 $cnt = count($arrayPath);
                 $cntTmp = 0;
                 if ($cnt === count($arrayRoute)) {
@@ -201,7 +237,7 @@ class Routing
                         return true;
                     }
                 }
-            } else if ($detail['path'] === $this->path) {
+            } else if ($yamlPath === $originalPath) {
                 $this->route = $detail;
                 return true;
             }
@@ -211,7 +247,7 @@ class Routing
 
     /**
      * Devuelve el objeto del controlador asignado en la ruta
-     * 
+     *
      * @return Controller
      */
     public function getController(): Controller
@@ -221,7 +257,7 @@ class Routing
 
     /**
      * Devuelve vista asignada en la ruta
-     * 
+     *
      * @return string
      */
     public function getView(): string
@@ -235,7 +271,7 @@ class Routing
 
     /**
      * Devuelve los parámetros asignados en la ruta
-     * 
+     *
      * @return array
      */
     public function getParams(): array
@@ -245,7 +281,7 @@ class Routing
 
     /**
      * Devuelve falso o verdadero si encontró o no una ruta válida
-     * 
+     *
      * @return bool
      */
     public function isValid(): bool
@@ -254,8 +290,18 @@ class Routing
     }
 
     /**
+     * Devuelve un arreglo con los parámetros de la ruta establecida
+     *
+     * @return array
+     */
+    public function getRoute(): array
+    {
+        return $this->route;
+    }
+
+    /**
      * Devuelve un arreglo con las rutas del sistema
-     * 
+     *
      * @throws ZOEException
      * @return array
      */
@@ -263,7 +309,7 @@ class Routing
     {
         try {
             if ($this->scope === self::DEV) {
-                return Yaml::parseFile($this->path_proyect . self::YAML);
+                return $this->searchAllFilesYaml($this->path_proyect . self::BUNDLE, Yaml::parseFile($this->path_proyect . self::YAML));
             } else {
                 if (apcu_exists(self::NAME_CACHE) === true) {
                     return apcu_fetch(self::NAME_CACHE);
@@ -271,13 +317,34 @@ class Routing
                     apcu_add(self::NAME_CACHE, (array) json_decode($this->cache->get(Routing::CACHE), true));
                     return apcu_fetch(self::NAME_CACHE);
                 } else {
-                    apcu_add(self::NAME_CACHE, Yaml::parseFile($this->path_proyect . self::YAML));
+                    apcu_add(self::NAME_CACHE, $this->searchAllFilesYaml($this->path_proyect . self::BUNDLE, Yaml::parseFile($this->path_proyect . self::YAML)));
                     $this->cache->set(Routing::CACHE, json_encode(apcu_fetch(self::NAME_CACHE), true));
                     return apcu_fetch(self::NAME_CACHE);
                 }
             }
         } catch (ParseException $exc) {
             throw new ZOEException($exc->getMessage());
+        }
+    }
+
+    /**
+     * Busca en los paquetes del sistema el archivo Config/Routing.yml para devolver un arreglo con las rutas del sistema
+     *
+     * @param string $path
+     * @param array $routinInit
+     * @return array
+     */
+    protected function searchAllFilesYaml(string $path, array $routinInit): array
+    {
+        if (is_dir($path) === true) {
+            $dir = opendir($path);
+            $yaml = $routinInit;
+            while ($file = readdir($dir)) {
+                if ($file !== '.' and $file !== '..' and is_file($path . $file . DIRECTORY_SEPARATOR . self::YAML) === true) {
+                    $yaml = array_merge($yaml, Yaml::parseFile($path . $file . DIRECTORY_SEPARATOR . self::YAML));
+                }
+            }
+            return $yaml;
         }
     }
 }
