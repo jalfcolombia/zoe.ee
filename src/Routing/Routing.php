@@ -114,9 +114,20 @@ class Routing
         $routings = $this->getRoutingFile();
         foreach ($routings as $routing => $detail) {
             if (strpos($detail['path'], ':') !== false) {
-                $arrayRoute = explode('/', $detail['path']);
-                $arrayPath = explode('/', $this->path);
+                
+                $arrayPath = $arrayRoute = array();
+                if (strpos($detail['path'], '.') !== false) {
+                    $arrayRoute = explode('.', $detail['path']);
+                    $arrayPath = explode('.', $this->path);
+                    $detail['path'] = substr($detail['path'], 0, strrpos($detail['path'], '.'));
+                    $this->path = substr($this->path, 0, strrpos($this->path, '.'));
+                    unset($arrayPath[0], $arrayRoute[0]);
+                }
+
+                $arrayRoute = array_merge(explode('/', $detail['path']), $arrayRoute);
+                $arrayPath = array_merge(explode('/', $this->path), $arrayPath);
                 unset($arrayPath[0], $arrayRoute[0]);
+
                 $cnt = count($arrayPath);
                 $cntTmp = 0;
                 if ($cnt === count($arrayRoute)) {
