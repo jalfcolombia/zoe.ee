@@ -1,4 +1,5 @@
 <?php
+
 namespace ZoeEE\View;
 
 class View

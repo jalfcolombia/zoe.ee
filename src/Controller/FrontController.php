@@ -1,4 +1,5 @@
 <?php
+
 namespace ZoeEE\Controller;
 
 use ZoeEE\i18n\i18n;

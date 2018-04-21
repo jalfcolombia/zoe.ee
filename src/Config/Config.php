@@ -1,4 +1,5 @@
 <?php
+
 namespace ZoeEE\Config;
 
 use ZoeEE\Cache\Cache;
@@ -49,8 +50,8 @@ class Config
 
     public function GetConfig(): array
     {
-        if ($this->cache->Has(self::CACHE) === true) {
-            return json_decode($this->cache->Get(self::CACHE));
+        if ($this->cache->has(self::CACHE) === true) {
+            return json_decode($this->cache->get(self::CACHE));
         } else {
             $config = yaml_parse_file(self::YAML);
             $this->cache->Set(self::CACHE, json_encode($config));

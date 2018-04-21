@@ -1,4 +1,5 @@
 <?php
+
 namespace ZoeEE\Middleware\Interfaces;
 
 use ZoeEE\Request\Request;

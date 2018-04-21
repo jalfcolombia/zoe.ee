@@ -1,4 +1,5 @@
 <?php
+
 namespace ZoeEE\Request;
 
 class Request

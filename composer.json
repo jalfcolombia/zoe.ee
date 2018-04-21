@@ -1,41 +1,32 @@
 {
-	"require" : {
-		"php" : ">=7.2.0",
-		"symfony/yaml" : "^4.0"
+	"require": {
+		"php": ">=7.2.0",
+		"symfony/yaml": "^4.0"
 	},
-	"name" : "sena/zoe.ee",
-	"description" : "Nogal (Enterprise Edition) Framework written in PHP7 by the National Learning Service (SENA) for business use.",
-	"autoload" : {
-		"psr-4" : {
-			"ZoeEE\\" : "src",
-			"ZoeEE\\Cache\\" : "src/Cache",
-			"ZoeEE\\Config\\" : "src/Config",
-			"ZoeEE\\Controller\\" : "src/Controller",
-			"ZoeEE\\ExceptionHandler\\" : "src/ExceptionHandler",
-			"ZoeEE\\i18n\\" : "src/i18n",
-			"ZoeEE\\Middleware\\Interfaces\\" : "src/Middleware/Interfaces",
-			"ZoeEE\\Request\\" : "src/Request",
-			"ZoeEE\\Routing\\" : "src/Routing",
-			"ZoeEE\\Validator\\" : "src/Validator",
-			"ZoeEE\\Session\\" : "src/Session",
-			"ZoeEE\\View\\" : "src/View"
+	"name": "sena/zoe.ee",
+	"description": "Nogal (Enterprise Edition) Framework written in PHP7 by the National Learning Service (SENA) for business use.",
+	"autoload": {
+		"psr-4": {
+			"ZoeEE\\" : "src"
 		}
 	},
-	"type" : "project",
-	"homepage" : "https://jalfcolombia.github.io/zoe.ee/",
-	"license" : "MIT",
-	"minimum-stability" : "stable",
-	"authors" : [{
-			"name" : "Julian Andrés Lasso Figueroa",
-			"email" : "jalasso69@misena.edu.co",
-			"role" : "Developer"
-		}, {
-			"name" : "Ivon Maritza Upegui Gomez",
-			"email" : "imupegui@misena.edu.co",
-			"role" : "Tester"
+	"type": "project",
+	"homepage": "https://jalfcolombia.github.io/zoe.ee/",
+	"license": "MIT",
+	"minimum-stability": "stable",
+	"authors": [
+		{
+			"name": "Julian Andrés Lasso Figueroa",
+			"email": "jalasso69@misena.edu.co",
+			"role": "Developer"
+		},
+		{
+			"name": "Ivon Maritza Upegui Gomez",
+			"email": "imupegui@misena.edu.co",
+			"role": "Tester"
 		}
 	],
-	"keywords" : [
+	"keywords": [
 		"framework",
 		"sena",
 		"zoe",
@@ -47,16 +38,17 @@
 		"jalfcolombia",
 		"mvc"
 	],
-	"support" : {
-		"email" : "jalasso69@misena.edu.co",
-		"issues" : "https://github.com/jalfcolombia/zoe.ee/issues",
-		"wiki" : "https://github.com/jalfcolombia/zoe.ee/wiki",
-		"source" : "https://github.com/jalfcolombia/zoe.ee/"
+	"support": {
+		"email": "jalasso69@misena.edu.co",
+		"issues": "https://github.com/jalfcolombia/zoe.ee/issues",
+		"wiki": "https://github.com/jalfcolombia/zoe.ee/wiki",
+		"source": "https://github.com/jalfcolombia/zoe.ee/"
 	},
-	"repositories" : [{
-			"type" : "git",
-			"url" : "https://github.com/jalfcolombia/zoe.ee/",
-			"name" : "zoe.ee"
+	"repositories": [
+		{
+			"type": "git",
+			"url": "https://github.com/jalfcolombia/zoe.ee/",
+			"name": "zoe.ee"
 		}
 	]
 }
