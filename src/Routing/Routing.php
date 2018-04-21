@@ -9,8 +9,11 @@ use ZoeEE\Controller\Controller;
 use ZoeEE\ExceptionHandler\ZOEException;
 
 /**
- *
+ * Clase para controlar el sistema de rutas basado en un arhchivo YAML
+ * 
+ * 
  * @author Julian Andres Lasso Figueroa <jalasso69@misena.edu.co>
+ * @package ZoEE\Routing
  */
 class Routing
 {
@@ -93,10 +96,12 @@ class Routing
     private $is_valid;
 
     /**
-     *
-     * @param string $path
-     * @param Cache $cache
-     * @param string $path_proyect
+     * Constructor de la clase Routing
+     * 
+     * @param string $path Ruta a la que se intenta acceder
+     * @param Cache $cache Objeto para manejar los archivos de la caché
+     * @param string $path_proyect Ruta del proyecto físico en el servidor
+     * @param string $scope Campo de aplicación del sistema (dev, prod o test)
      */
     public function __construct(string $path, Cache $cache, string $path_proyect, string $scope = self::DEV)
     {
@@ -109,6 +114,12 @@ class Routing
         $this->is_valid = $this->solvePath();
     }
 
+    /**
+     * Resuelve la ruta provista
+     * 
+     * @throws ZOEException
+     * @return bool Verdadero si encontró una ruta en caso contrario devolverá Falso
+     */
     private function solvePath(): bool
     {
         $routings = $this->getRoutingFile();
@@ -198,11 +209,21 @@ class Routing
         return false;
     }
 
+    /**
+     * Devuelve el objeto del controlador asignado en la ruta
+     * 
+     * @return Controller
+     */
     public function getController(): Controller
     {
         return new $this->route['controller']();
     }
 
+    /**
+     * Devuelve vista asignada en la ruta
+     * 
+     * @return string
+     */
     public function getView(): string
     {
         if (is_array($this->route['view']) === true) {
@@ -212,16 +233,32 @@ class Routing
         }
     }
 
+    /**
+     * Devuelve los parámetros asignados en la ruta
+     * 
+     * @return array
+     */
     public function getParams(): array
     {
         return $this->params;
     }
 
+    /**
+     * Devuelve falso o verdadero si encontró o no una ruta válida
+     * 
+     * @return bool
+     */
     public function isValid(): bool
     {
         return $this->is_valid;
     }
 
+    /**
+     * Devuelve un arreglo con las rutas del sistema
+     * 
+     * @throws ZOEException
+     * @return array
+     */
     protected function getRoutingFile(): array
     {
         try {
