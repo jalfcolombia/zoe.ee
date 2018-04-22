@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the ZoeEE package.
+ *
+ * (c) Julian Lasso <jalasso69@misena.edu.co>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ZoeEE\Cache;
 
 use ZoeEE\ExceptionHandler\ZOEException;
@@ -11,7 +20,15 @@ use ZoeEE\ExceptionHandler\ZOEException;
  */
 class Cache
 {
+
+    /**
+     * Nombre de la carpeta del caché
+     */
+    private const DIR = '.cache/';
     
+    /**
+     * Extención de los archivos en la caché
+     */
     private const EXTENSION = '.cached';
 
     /**
@@ -22,13 +39,6 @@ class Cache
     private $path;
 
     /**
-     * Nombre de la carpeta del caché
-     *
-     * @var string
-     */
-    private $dir;
-
-    /**
      * Constructor de la clase Cache
      *
      * @param string $path
@@ -36,10 +46,9 @@ class Cache
      * @param string $dir
      *            Nombre de la carpeta del caché
      */
-    public function __construct(string $path, string $dir)
+    public function __construct(string $path)
     {
         $this->path = $path;
-        $this->dir = $dir;
     }
 
     /**
@@ -61,7 +70,7 @@ class Cache
      */
     public function has(string $file): bool
     {
-        return is_file($this->path . $this->dir . $file . self::EXTENSION);
+        return is_file($this->path . self::DIR . $file . self::EXTENSION);
     }
 
     /**
@@ -75,10 +84,10 @@ class Cache
      */
     public function set(string $file, string $content): void
     {
-        $file = $this->path . $this->dir . $file;
+        $file = $this->path . self::DIR . $file;
         $pos = strrpos($file, DIRECTORY_SEPARATOR);
         if ($pos !== false) {
-            $dir = substr($file, 0, $pos+1);
+            $dir = substr($file, 0, $pos + 1);
             if (is_dir($dir) === false) {
                 mkdir($dir, 0766, true);
             }
@@ -101,7 +110,7 @@ class Cache
         if ($this->has($file) === false) {
             throw new ZOEException(ZOEException::F0001, 'F0001');
         } else {
-            return file_get_contents($this->path . $this->dir . $file . self::EXTENSION);
+            return file_get_contents($this->path . self::DIR . $file . self::EXTENSION);
         }
     }
 
@@ -117,7 +126,7 @@ class Cache
         if ($this->has($file) === false) {
             throw new ZOEException(ZOEException::F0001, 'F0001');
         } else {
-            return unlink($this->path . $this->dir . $file . self::EXTENSION);
+            return unlink($this->path . self::DIR . $file . self::EXTENSION);
         }
     }
 }

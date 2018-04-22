@@ -112,7 +112,7 @@ class Routing
     /**
      * Constructor de la clase Routing
      *
-     * @param string $path
+     * @param string|null $path
      *            Ruta a la que se intenta acceder
      * @param Cache $cache
      *            Objeto para manejar los archivos de la caché
@@ -121,7 +121,7 @@ class Routing
      * @param string $scope
      *            Campo de aplicación del sistema (dev, prod o test)
      */
-    public function __construct(string $path, Cache $cache, string $path_proyect, string $scope = self::DEV)
+    public function __construct(?string $path, Cache $cache, string $path_proyect, string $scope = self::DEV)
     {
         $this->params = array();
         $this->route = array();
@@ -254,6 +254,16 @@ class Routing
     {
         return new $this->route['controller']();
     }
+    
+    /**
+     * Devuelve el nombre del paquete
+     * 
+     * @return string
+     */
+    public function getBundle(): string
+    {
+        return $this->route['bundle'];
+    }
 
     /**
      * Devuelve vista asignada en la ruta
@@ -313,12 +323,12 @@ class Routing
             } else {
                 if (apcu_exists(self::NAME_CACHE) === true) {
                     return apcu_fetch(self::NAME_CACHE);
-                } else if ($this->cache->has(Routing::CACHE) === true) {
-                    apcu_add(self::NAME_CACHE, (array) json_decode($this->cache->get(Routing::CACHE), true));
+                } else if ($this->cache->has(self::CACHE) === true) {
+                    apcu_add(self::NAME_CACHE, (array) json_decode($this->cache->get(self::CACHE), true));
                     return apcu_fetch(self::NAME_CACHE);
                 } else {
                     apcu_add(self::NAME_CACHE, $this->searchAllFilesYaml($this->path_proyect . self::BUNDLE, Yaml::parseFile($this->path_proyect . self::YAML)));
-                    $this->cache->set(Routing::CACHE, json_encode(apcu_fetch(self::NAME_CACHE), true));
+                    $this->cache->set(self::CACHE, json_encode(apcu_fetch(self::NAME_CACHE), true));
                     return apcu_fetch(self::NAME_CACHE);
                 }
             }

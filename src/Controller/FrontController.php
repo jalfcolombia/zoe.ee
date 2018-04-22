@@ -1,19 +1,26 @@
 <?php
 
+/**
+ * This file is part of the ZoeEE package.
+ *
+ * (c) Julian Lasso <jalasso69@misena.edu.co>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ZoeEE\Controller;
 
-use ZoeEE\i18n\i18n;
-use ZoeEE\View\View;
 use ZoeEE\Cache\Cache;
 use ZoeEE\Config\Config;
-use ZoeEE\Routing\Routing;
+use ZoeEE\i18n\i18n;
 use ZoeEE\Request\Request;
+use ZoeEE\Routing\Routing;
+use ZoeEE\View\View;
 use ZoeEE\Session\Session;
 
 class FrontController
 {
-
-    private const DIR = '.cache/';
 
     /**
      *
@@ -71,18 +78,29 @@ class FrontController
 
     /**
      *
+     * @var string
+     */
+    private $scope;
+
+    /**
+     *
      * @param string $path
      *            Ruta del proyecto en el servidor
+     * @param string $scope
+     *            Ambito del entorno
      */
-    public function __construct(string $path)
+    public function __construct(string $path, string $scope)
     {
         $this->path = $path;
+        $this->scope = $scope;
+        $this->request = new Request();
+        $this->cache = new Cache($path);
+        $this->routing = new Routing($this->request->getServer('PATH_INFO'), $this->cache, $path, $scope);
+        $this->config = new Config($this->cache, $scope, $this->routing->getBundle());
+        
         $this->i18n = new i18n();
         $this->view = new View();
-        $this->routing = new Routing();
-        $this->request = new Request();
-        $this->cache = new Cache($path, self::DIR);
-        $this->config = new Config($this->cache);
+        
         $this->session = new Session($this->config->Get('session.name'), $this->config->Get('session.time'));
     }
 

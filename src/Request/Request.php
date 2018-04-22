@@ -38,125 +38,125 @@ class Request
         $this->server = (filter_input_array(INPUT_SERVER) === false) ? filter_input_array(INPUT_SERVER) : array();
     }
 
-    public function HasQuery(string $param): bool
+    public function hasQuery(string $param): bool
     {
         return isset($this->get[$param]);
     }
 
-    public function GetQuery(string $param)
+    public function getQuery(string $param)
     {
         return $this->get[$param];
     }
 
-    public function DeleteQuery(string $param): Request
+    public function deleteQuery(string $param): Request
     {
         unset($this->get[$param]);
         return $this;
     }
 
-    public function HasParam(string $param): bool
+    public function hasParam(string $param): bool
     {
         return isset($this->post[$param]);
     }
 
-    public function GetParam(string $param)
+    public function getParam(string $param)
     {
         return $this->post[$param];
     }
 
-    public function DeleteParam(string $param): Request
+    public function deleteParam(string $param): Request
     {
         unset($this->post[$param]);
         return $this;
     }
 
-    public function HasPut(string $param): bool
+    public function hasPut(string $param): bool
     {
         return isset($this->put[$param]);
     }
 
-    public function GetPut(string $param)
+    public function getPut(string $param)
     {
         return $this->put[$param];
     }
 
-    public function DeletePut(string $param): Request
+    public function deletePut(string $param): Request
     {
         unset($this->put[$param]);
         return $this;
     }
 
-    public function HasDelete(string $param): bool
+    public function hasDelete(string $param): bool
     {
         return isset($this->delete[$param]);
     }
 
-    public function GetDelete(string $param)
+    public function getDelete(string $param)
     {
         return $this->delete[$param];
     }
 
-    public function DeleteDelete(string $param): Request
+    public function deleteDelete(string $param): Request
     {
         unset($this->delete[$param]);
         return $this;
     }
 
-    public function HasHeader(string $param): bool
+    public function hasHeader(string $param): bool
     {
         return isset($this->header[$param]);
     }
 
-    public function GetHeader(string $param)
+    public function getHeader(string $param)
     {
         return $this->header[$param];
     }
 
-    public function DeleteHeader(string $param): Request
+    public function deleteHeader(string $param): Request
     {
         unset($this->header[$param]);
         return $this;
     }
 
-    public function HasCookie(string $param): bool
+    public function hasCookie(string $param): bool
     {
         return isset($this->cookie[$param]);
     }
 
-    public function GetCookie(string $param)
+    public function getCookie(string $param)
     {
         return $this->cookie[$param];
     }
 
-    public function DeleteCookie(string $param): Request
+    public function deleteCookie(string $param): Request
     {
         unset($this->cookie[$param]);
         return $this;
     }
 
-    public function HasFile(string $file): bool
+    public function hasFile(string $file): bool
     {
         return isset($this->file[$file]);
     }
 
-    public function GetFile(string $file)
+    public function getFile(string $file): ?string
     {
-        return $this->cookie[$file];
+        return ($this->hasFile($file) === true) ? $this->file[$file] : null;
     }
 
-    public function DeleteFile(string $file): Request
+    public function deleteFile(string $file): Request
     {
-        unset($this->cookie[$file]);
+        unset($this->file[$file]);
         return $this;
     }
 
-    public function HasServer(string $param): bool
+    public function hasServer(string $param): bool
     {
         return isset($this->server[$param]);
     }
 
-    public function GetServer(string $server)
+    public function getServer(string $server): ?string
     {
-        return $this->server[$server];
+        return ($this->hasServer($server) === true) ? $this->server[$server] : null;
     }
 }
