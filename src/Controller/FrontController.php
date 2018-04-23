@@ -8,7 +8,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 namespace ZoeEE\Controller;
 
 use ZoeEE\Cache\Cache;
@@ -19,6 +18,12 @@ use ZoeEE\Routing\Routing;
 use ZoeEE\View\View;
 use ZoeEE\Session\Session;
 
+/**
+ *
+ * @author Julian Lasso <jalasso69@misena.edu.co>
+ * @package ZoeEE
+ * @subpackage Cache
+ */
 class FrontController
 {
 
@@ -96,25 +101,17 @@ class FrontController
         $this->request = new Request();
         $this->cache = new Cache($path);
         $this->routing = new Routing($this->request->getServer('PATH_INFO'), $this->cache, $path, $scope);
-        $this->config = new Config($this->cache, $scope, $this->routing->getBundle());
-        
-        $this->i18n = new i18n();
+        $this->config = new Config($this->cache, $scope, $path, $this->routing->getBundle());
+        $this->i18n = new i18n($this->config->get('lang'), $scope, $this->cache, $path, $this->routing->getBundle());
+        $this->session = new Session($this->config->get('session.name'), $this->config->get('session.time'));
         $this->view = new View();
-        
-        $this->session = new Session($this->config->Get('session.name'), $this->config->Get('session.time'));
     }
 
-    /**
-     *
-     * @param string $scope
-     *            Espacio de trabajo dev o prod
-     */
-    public function Run(string $scope)
+    public function run()
     {
-        $this->scope = $scope;
-        $controller = $this->routing->GetController();
-        $controller->Main($this->request, $this->i18n, $this->config, $this->session, $this->routing);
-        $this->view->SetView($this->path . $this->routing->GetView())
+        $controller = $this->routing->getController();
+        $controller->main($this->request, $this->i18n, $this->config, $this->session, $this->routing);
+        $this->view->SetView($this->path . $this->routing->getView())
             ->SetVariables((array) $controller)
             ->Render();
     }

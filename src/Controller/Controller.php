@@ -1,5 +1,14 @@
 <?php
 
+/**
+ * This file is part of the ZoeEE package.
+ *
+ * (c) Julian Lasso <jalasso69@misena.edu.co>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ZoeEE\Controller;
 
 use ZoeEE\Cache\Cache;
@@ -9,6 +18,12 @@ use ZoeEE\Session\Session;
 use ZoeEE\i18n\i18n;
 use ZoeEE\Routing\Routing;
 
+/**
+ * 
+ * @author Julian Lasso <jalasso69@misena.edu.co>
+ * @package ZoeEE
+ * @subpackage Controller
+ */
 abstract class Controller
 {
 
@@ -21,7 +36,7 @@ abstract class Controller
 
     private $view;
 
-    abstract function Main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
+    abstract function main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
 
     public function __construct(Cache $cache)
     {
@@ -34,7 +49,7 @@ abstract class Controller
      *
      * @return Cache
      */
-    protected function GetCache(): Cache
+    protected function getCache(): Cache
     {
         return $this->cache;
     }
@@ -45,7 +60,7 @@ abstract class Controller
      * @param string $view
      * @return Controller
      */
-    protected function ChangeView(string $view): Controller
+    protected function changeView(string $view): Controller
     {
         $this->view = $view;
         return $this;
@@ -56,7 +71,7 @@ abstract class Controller
      *
      * @return string|NULL
      */
-    public function GetView(): ?string
+    public function getView(): ?string
     {
         return $this->view;
     }

@@ -16,7 +16,9 @@ use ZoeEE\ExceptionHandler\ZOEException;
 /**
  * Clase para controlar la caché del sistema
  *
- * @author julian
+ * @author Julian Lasso <jalasso69@misena.edu.co>
+ * @package ZoeEE
+ * @subpackage Cache
  */
 class Cache
 {

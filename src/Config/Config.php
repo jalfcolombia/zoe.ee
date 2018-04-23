@@ -19,9 +19,9 @@ use ZoeEE\ExceptionHandler\ZOEException;
 /**
  * Class Config
  *
+ * @author Julian Lasso <jalasso69@misena.edu.co>
  * @package ZoeEE
  * @subpackage Config
- * @author Julian Lasso <jalasso69@misena.edu.co>
  */
 class Config
 {
@@ -103,15 +103,15 @@ class Config
             if ($this->scope === self::DEV) {
                 return $this->loadBundleConfigYaml($this->path_proyect . self::DIR . $this->bundle . self::YAML, Yaml::parseFile($this->path_proyect . self::YAML));
             } else {
-                if (apcu_exists(self::NAME_CACHE) === true) {
-                    return apcu_fetch(self::NAME_CACHE);
-                } else if ($this->cache->has(self::CACHE) === true) {
-                    apcu_add(self::NAME_CACHE, (array) json_decode($this->cache->get(self::CACHE), true));
-                    return apcu_fetch(self::NAME_CACHE);
+                if (apcu_exists(self::NAME_CACHE . $this->bundle) === true) {
+                    return apcu_fetch(self::NAME_CACHE . $this->bundle);
+                } else if ($this->cache->has(self::CACHE . $this->bundle) === true) {
+                    apcu_add(self::NAME_CACHE . $this->bundle, (array) json_decode($this->cache->get(self::CACHE . $this->bundle), true));
+                    return apcu_fetch(self::NAME_CACHE . $this->bundle);
                 } else {
-                    apcu_add(self::NAME_CACHE, $this->loadBundleConfigYaml($this->path_proyect . self::DIR . $this->bundle . self::YAML, Yaml::parseFile($this->path_proyect . self::YAML)));
-                    $this->cache->set(self::CACHE, json_encode(apcu_fetch(self::NAME_CACHE), true));
-                    return apcu_fetch(self::NAME_CACHE);
+                    apcu_add(self::NAME_CACHE . $this->bundle, $this->loadBundleConfigYaml($this->path_proyect . self::DIR . $this->bundle . self::YAML, Yaml::parseFile($this->path_proyect . self::YAML)));
+                    $this->cache->set(self::CACHE . $this->bundle, json_encode(apcu_fetch(self::NAME_CACHE . $this->bundle), true));
+                    return apcu_fetch(self::NAME_CACHE . $this->bundle);
                 }
             }
         } catch (ParseException $exc) {

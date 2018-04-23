@@ -21,8 +21,9 @@ use ZoeEE\ExceptionHandler\ZOEException;
  * Clase para controlar el sistema de rutas basado en un arhchivo YAML
  *
  *
- * @author Julian Andres Lasso Figueroa <jalasso69@misena.edu.co>
- * @package ZoEE\Routing
+ * @author Julian Lasso <jalasso69@misena.edu.co>
+ * @package ZoEE
+ * @subpackage Routing
  */
 class Routing
 {

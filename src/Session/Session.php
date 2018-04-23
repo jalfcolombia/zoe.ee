@@ -1,11 +1,22 @@
 <?php
 
+/**
+ * This file is part of the ZoeEE package.
+ *
+ * (c) Julian Lasso <jalasso69@misena.edu.co>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ZoeEE\Session;
 
 /**
  * Clase para manejar las sesiones del sistema
  *
- * @author Julian Andres Lasso Figueroa <jlasso69@misena.edu.co>
+ * @author Julian Lasso <jalasso69@misena.edu.co>
+ * @package ZoeEE
+ * @subpackage Session
  */
 class Session
 {

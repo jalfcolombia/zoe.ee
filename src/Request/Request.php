@@ -1,7 +1,22 @@
 <?php
 
+/**
+ * This file is part of the ZoeEE package.
+ *
+ * (c) Julian Lasso <jalasso69@misena.edu.co>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace ZoeEE\Request;
 
+/**
+ * 
+ * @author Julian Lasso <jalasso69@misena.edu.co>
+ * @package ZoeEE
+ * @subpackage Request
+ */
 class Request
 {
 

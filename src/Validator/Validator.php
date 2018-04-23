@@ -8,12 +8,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace ZoeEE\Validator;
 
 /**
  * Clase para realizar validaciones en formularios o similares
  *
- * @author Julián Andrés Lasso Figueroa <jalasso69@misena.edu.co>
+ * @author Julian Lasso <jalasso69@misena.edu.co>
+ * @package ZoeEE
+ * @subpackage Validator
  */
 class Validator
 {
