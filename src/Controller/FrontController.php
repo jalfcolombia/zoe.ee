@@ -8,6 +8,7 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+
 namespace ZoeEE\Controller;
 
 use ZoeEE\Cache\Cache;
@@ -83,12 +84,6 @@ class FrontController
 
     /**
      *
-     * @var string
-     */
-    private $scope;
-
-    /**
-     *
      * @param string $path
      *            Ruta del proyecto en el servidor
      * @param string $scope
@@ -96,23 +91,43 @@ class FrontController
      */
     public function __construct(string $path, string $scope)
     {
-        $this->path = $path;
-        $this->scope = $scope;
-        $this->request = new Request();
-        $this->cache = new Cache($path);
-        $this->routing = new Routing($this->request->getServer('PATH_INFO'), $this->cache, $path, $scope);
-        $this->config = new Config($this->cache, $scope, $path, $this->routing->getBundle());
-        $this->i18n = new i18n($this->config->get('lang'), $scope, $this->cache, $path, $this->routing->getBundle());
-        $this->session = new Session($this->config->get('session.name'), $this->config->get('session.time'));
-        $this->view = new View();
+        try {
+            $this->path = $path;
+            $this->scope = $scope;
+            $this->request = new Request();
+            $this->cache = new Cache($path);
+            $this->routing = new Routing($this->request->getServer('PATH_INFO'), $this->cache, $path, $scope);
+            $this->config = new Config($this->cache, $scope, $path, $this->routing->getBundle());
+            $this->i18n = new i18n($this->config->get('lang'), $scope, $this->cache, $path, $this->routing->getBundle());
+            $this->session = new Session($this->config->get('session.name'), $this->config->get('session.time'));
+            $this->view = new View($path);
+        } catch (\ErrorException | \Exception $exc) {
+            echo 'File: ' . $exc->getFile() . '<br>';
+            echo 'Line: ' . $exc->getLine() . '<br>';
+            echo 'Error: ' . $exc->getCode() . '<br>';
+            echo 'Message: ' . $exc->getMessage() . '<br>';
+            echo '<pre>';
+            print_r($exc->getTrace());
+            echo '</pre>';
+        }
     }
 
     public function run()
     {
-        $controller = $this->routing->getController();
-        $controller->main($this->request, $this->i18n, $this->config, $this->session, $this->routing);
-        $this->view->SetView($this->path . $this->routing->getView())
-            ->SetVariables((array) $controller)
-            ->Render();
+        try {
+            $controller = $this->routing->getController();
+            $controller->main($this->request, $this->i18n, $this->config, $this->session, $this->routing);
+            $this->view->SetView($this->routing->getView())
+                ->SetVariables((array) $controller)
+                ->Render($this->routing->getBundle() . DIRECTORY_SEPARATOR);
+        } catch (\ErrorException | \Exception $exc) {
+            echo 'File: ' . $exc->getFile() . '<br>';
+            echo 'Line: ' . $exc->getLine() . '<br>';
+            echo 'Error: ' . $exc->getCode() . '<br>';
+            echo 'Message: ' . $exc->getMessage() . '<br>';
+            echo '<pre>';
+            print_r($exc->getTrace());
+            echo '</pre>';
+        }
     }
 }

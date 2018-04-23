@@ -26,7 +26,9 @@ use ZoeEE\ExceptionHandler\ZOEException;
 class i18n
 {
 
-    private const DIR = 'i18n' . DIRECTORY_SEPARATOR;
+    private const DIR_BUNDLE = 'Bundle' . DIRECTORY_SEPARATOR;
+    
+    private const DIR_I18N = 'i18n' . DIRECTORY_SEPARATOR;
 
     private const NAME_CACHE = 'zoei18n';
 
@@ -80,12 +82,13 @@ class i18n
     }
 
     /**
-     * 
+     *
      * @param string $text
-     * @param mixed $args [opcional]
+     * @param mixed $args
+     *            [opcional]
      * @return string
      */
-    public function __(string $text, $args): string
+    public function __(string $text, $args = null): string
     {
         $dictionary = $this->getDictionary();
         if (is_string($args) === true) {
@@ -93,6 +96,7 @@ class i18n
         } elseif (is_array($args) === true) {
             return vsprintf($dictionary[$text], $args);
         }
+        return $dictionary[$text];
     }
 
     /**
@@ -105,7 +109,11 @@ class i18n
     {
         try {
             if ($this->scope === self::DEV) {
-                return $this->loadBundleDictionaryYaml($this->path_proyect . self::DIR . $this->bundle . self::YAML . $this->language . '.yml', Yaml::parseFile($this->path_proyect . self::YAML . $this->language . '.yml'));
+                if (is_file($this->path_proyect . self::YAML . $this->language . '.yml') === true) {
+                    return $this->loadBundleDictionaryYaml($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml', Yaml::parseFile($this->path_proyect . self::YAML . $this->language . '.yml'));
+                } else {
+                    return Yaml::parseFile($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml');
+                }
             } else {
                 if (apcu_exists(self::NAME_CACHE . $this->bundle . $this->language) === true) {
                     return apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language);
@@ -113,7 +121,11 @@ class i18n
                     apcu_add(self::NAME_CACHE . $this->bundle . $this->language, (array) json_decode($this->cache->get(self::CACHE . $this->bundle . $this->language), true));
                     return apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language);
                 } else {
-                    apcu_add(self::NAME_CACHE . $this->bundle . $this->language, $this->loadBundleDictionaryYaml($this->path_proyect . self::DIR . $this->bundle . self::YAML . $this->language . '.yml', Yaml::parseFile($this->path_proyect . self::YAML . $this->language . '.yml')));
+                    if (is_file($this->path_proyect . self::YAML . $this->language . '.yml') === true) {
+                        apcu_add(self::NAME_CACHE . $this->bundle . $this->language, $this->loadBundleDictionaryYaml($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml', Yaml::parseFile($this->path_proyect . self::YAML . $this->language . '.yml')));
+                    } else {
+                        apcu_add(self::NAME_CACHE . $this->bundle . $this->language, Yaml::parseFile($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml'));
+                    }
                     $this->cache->set(self::CACHE . $this->bundle . $this->language, json_encode(apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language), true));
                     return apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language);
                 }

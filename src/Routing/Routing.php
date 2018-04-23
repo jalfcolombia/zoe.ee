@@ -126,7 +126,7 @@ class Routing
     {
         $this->params = array();
         $this->route = array();
-        $this->path = $path;
+        $this->path = ($path === null) ? '/' : $path;
         $this->cache = $cache;
         $this->path_proyect = $path_proyect;
         $this->scope = $scope;
@@ -253,7 +253,8 @@ class Routing
      */
     public function getController(): Controller
     {
-        return new $this->route['controller']();
+        eval("\$controller = new \\Bundle\\{$this->route['bundle']}\\Controller\\{$this->route['controller']}Controller(\$this->cache);");
+        return $controller;
     }
     
     /**

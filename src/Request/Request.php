@@ -38,8 +38,8 @@ class Request
 
     public function __construct()
     {
-        $this->get = (filter_input_array(INPUT_GET) === false) ? filter_input_array(INPUT_GET) : array();
-        $this->post = (filter_input_array(INPUT_POST) === false) ? filter_input_array(INPUT_POST) : array();
+        $this->get = (filter_input_array(INPUT_GET) === false) ? array() : filter_input_array(INPUT_GET);
+        $this->post = (filter_input_array(INPUT_POST) === false) ? array() : filter_input_array(INPUT_POST);
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'PUT') {
             parse_str(file_get_contents("php://input"), $this->put);
             $this->delete = array();
@@ -48,9 +48,9 @@ class Request
             $this->put = array();
         }
         $this->header = (getallheaders() === false) ? array() : getallheaders();
-        $this->cookie = (filter_input_array(INPUT_COOKIE) === false) ? filter_input_array(INPUT_COOKIE) : array();
+        $this->cookie = (filter_input_array(INPUT_COOKIE) === false) ? array() : filter_input_array(INPUT_COOKIE);
         $this->file = $_FILES;
-        $this->server = (filter_input_array(INPUT_SERVER) === false) ? filter_input_array(INPUT_SERVER) : array();
+        $this->server = (filter_input_array(INPUT_SERVER) === false) ? array() : filter_input_array(INPUT_SERVER);
     }
 
     public function hasQuery(string $param): bool

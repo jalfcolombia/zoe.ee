@@ -20,12 +20,17 @@ namespace ZoeEE\View;
 class View
 {
 
+    private const DIR = 'View' . DIRECTORY_SEPARATOR;
+    
     private $variables;
 
     private $view;
+    
+    private $path;
 
-    public function __construct(string $view = null, array $variables = array())
+    public function __construct(string $path, string $view = null, array $variables = array())
     {
+        $this->path = $path;
         $this->variables = $variables;
         $this->view = $view;
     }
@@ -47,11 +52,16 @@ class View
         return $this;
     }
 
-    public function Render()
+    public function Render(string $bundle)
     {
         if (count($this->variables) > 0) {
             extract($this->variables);
         }
-        require $this->view;
+        
+        if (is_file($this->path . self::DIR . $bundle . $this->view . '.template.php') === true) {
+            require $this->path . self::DIR . $bundle . $this->view . '.template.php';
+        } else {
+            require $this->path . self::DIR . $this->view . '.template.php';
+        }
     }
 }
