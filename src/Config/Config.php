@@ -17,57 +17,117 @@ use ZoeEE\Cache\Cache;
 use ZoeEE\ExceptionHandler\ZOEException;
 
 /**
- * Class Config
+ * Clase para manejar la configuraci√≥n del sistema y los paquetes del proyecto
  *
  * @author Julian Lasso <jalasso69@misena.edu.co>
  * @package ZoeEE
  * @subpackage Config
+ * @example El siguiente es un ejemplo b√°sico de la estructura YAML del archivo Config.yml
+ *          project: testZoeEE
+ *          url: localhost|TestZoezoe.ee|Public|
+ *          lang: en
+ *          session:
+ *          --name: TestSessionZoeEE
+ *          --time: 3600
+ *          public:
+ *          --path: Public
+ *          --css: css
+ *          --javascript: js
+ *          --images: img
+ *          --upload: upload
+ *          --download: download
+ *          db:
+ *          --driver: pgsql
+ *          --host: localhost
+ *          --port: 5432
+ *          --user: postgres
+ *          --password: 12345
+ *          --database: db_proyecto
  */
 class Config
 {
 
-    private const DIR = 'Bundle' . DIRECTORY_SEPARATOR;
+    /**
+     * Nombre del directorio donde se alojan los paquetes
+     */
+    private const DIR_BUNDLE = 'Bundle' . DIRECTORY_SEPARATOR;
 
+    /**
+     * Nombre del directorio donde se aloja la configuraci√≥n general y de los paquetes
+     */
+    private const DIR_CONFIG = 'Config' . DIRECTORY_SEPARATOR;
+
+    /**
+     * Nombre de las variables en la cach√© de la memor√≠a RAM
+     */
     private const NAME_CACHE = 'zoeConfig';
 
     /**
-     * DirecciÛn y nombre de archivo en la cachÈ
+     * Direcci√≥n y nombre de archivo en la cach√©
      */
-    private const CACHE = 'Confing' . DIRECTORY_SEPARATOR . 'Config';
+    private const CACHE = self::DIR_CONFIG . 'Config';
 
     /**
-     * DirecciÛn y nombre del archivo YAML
+     * Direcci√≥n y nombre del archivo YAML
      */
-    private const YAML = 'Config' . DIRECTORY_SEPARATOR . 'Config.yml';
+    private const YAML = self::DIR_CONFIG . 'Config.yml';
 
     /**
-     * Campo de aplicaciÛn de desarrollo
+     * Campo de aplicaci√≥n de desarrollo
      */
     private const DEV = 'dev';
 
     /**
-     * Campo de aplicaciÛn de producciÛn
+     * Campo de aplicaci√≥n de producci√≥n
      */
     private const PROD = 'prod';
 
     /**
-     * Campo de aplicaciÛn de testeo
+     * Campo de aplicaci√≥n de testeo
      */
     private const TEST = 'test';
 
     /**
-     * Objeto para manejar el cachÈ del sistema
+     * Objeto para manejar el cach√© del sistema
      *
      * @var Cache
      */
     private $cache;
 
+    /**
+     * Ambito en el que se ejecuta el proyecto.
+     * Ej: dev, proc o test
+     *
+     * @var string
+     */
     private $scope;
 
+    /**
+     * Nombre del paquete a procesar
+     *
+     * @var string
+     */
     private $bundle;
 
+    /**
+     * Ruta f√≠sica del proyecto en el servidor
+     *
+     * @var string
+     */
     private $path_proyect;
 
+    /**
+     * Constructor de la clase Config
+     *
+     * @param Cache $cache
+     *            Objeto para manejar la cach√© del sistema.
+     * @param string $scope
+     *            Ambito en el que se ejecuta el proyecto. Ej: dev, proc o test
+     * @param string $path_proyect
+     *            Ruta f√≠sica del proyecto en el servidor
+     * @param string|null $bundle
+     *            [opcional] Nombre del paquete a procesar
+     */
     public function __construct(Cache $cache, string $scope, string $path_proyect, ?string $bundle = null)
     {
         $this->cache = $cache;
@@ -77,12 +137,12 @@ class Config
     }
 
     /**
-     * Devuelve el valor del par·metro de configuraciÛn.<br>
+     * Devuelve el valor del par√°metro de configuraci√≥n.<br>
      * Ejemplo: url, public.path, db.driver
      *
      * @param string $param
-     *            Nombre del par·metro de configuraciÛn
-     * @return mixed Valor contenido en el par·metro de configuraciÛn
+     *            Nombre del parÔøΩmetro de configuraci√≥n
+     * @return mixed Valor contenido en el par√°metro de configuraci√≥n
      */
     public function get(string $param)
     {
@@ -92,26 +152,26 @@ class Config
     }
 
     /**
-     * Devuelve un arreglo con la configuraciÛn del sistema
+     * Devuelve un arreglo con la configuraci√≥n del sistema
      *
      * @throws ZOEException
-     * @return array
+     * @return array Arreglo con la figuraci√≥n del sistema m√°s la configuraci√≥n del paquete a usar
      */
     protected function getConfig(): array
     {
         try {
             if ($this->scope === self::DEV) {
-                return $this->loadBundleConfigYaml($this->path_proyect . self::DIR . $this->bundle . self::YAML, Yaml::parseFile($this->path_proyect . self::YAML));
+                return $this->loadBundleConfigYaml($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML, Yaml::parseFile($this->path_proyect . self::YAML));
             } else {
-                if (apcu_exists(self::NAME_CACHE . $this->bundle) === true) {
-                    return apcu_fetch(self::NAME_CACHE . $this->bundle);
-                } else if ($this->cache->has(self::CACHE . $this->bundle) === true) {
-                    apcu_add(self::NAME_CACHE . $this->bundle, (array) json_decode($this->cache->get(self::CACHE . $this->bundle), true));
-                    return apcu_fetch(self::NAME_CACHE . $this->bundle);
+                if (apcu_exists(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle) === true) {
+                    return apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle);
+                } else if ($this->cache->has(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle) === true) {
+                    apcu_add(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle, (array) json_decode($this->cache->get(self::DIR_BUNDLE . $this->bundle . self::CACHE), true));
+                    return apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle);
                 } else {
-                    apcu_add(self::NAME_CACHE . $this->bundle, $this->loadBundleConfigYaml($this->path_proyect . self::DIR . $this->bundle . self::YAML, Yaml::parseFile($this->path_proyect . self::YAML)));
-                    $this->cache->set(self::CACHE . $this->bundle, json_encode(apcu_fetch(self::NAME_CACHE . $this->bundle), true));
-                    return apcu_fetch(self::NAME_CACHE . $this->bundle);
+                    apcu_add(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle, $this->loadBundleConfigYaml($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML, Yaml::parseFile($this->path_proyect . self::YAML)));
+                    $this->cache->set(self::DIR_BUNDLE . $this->bundle . self::CACHE, json_encode(apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle), true));
+                    return apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle);
                 }
             }
         } catch (ParseException $exc) {

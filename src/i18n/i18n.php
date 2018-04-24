@@ -17,7 +17,7 @@ use ZoeEE\Cache\Cache;
 use ZoeEE\ExceptionHandler\ZOEException;
 
 /**
- * Clase para manejar la internacionalizaciÛn de los mensajes en el sistema
+ * Clase para manejar la internacionalizaci√≥n de los mensajes en el sistema
  *
  * @author Julian Lasso <jalasso69@misena.edu.co>
  * @package ZoeEE
@@ -26,52 +26,95 @@ use ZoeEE\ExceptionHandler\ZOEException;
 class i18n
 {
 
+    /**
+     * Nombre del directorio de los paquetes por defecto
+     */
     private const DIR_BUNDLE = 'Bundle' . DIRECTORY_SEPARATOR;
-    
+
+    /**
+     * Nombre del directorio donde se encuentran los diccionarios
+     */
     private const DIR_I18N = 'i18n' . DIRECTORY_SEPARATOR;
 
+    /**
+     * Nombre del cach√© para los diccionarios en memoria RAM
+     */
     private const NAME_CACHE = 'zoei18n';
 
     /**
-     * DirecciÛn y nombre de archivo en la cachÈ
+     * Direcci√≥n y nombre de archivo en la cach√©
      */
-    private const CACHE = 'i18n' . DIRECTORY_SEPARATOR;
+    private const CACHE = self::DIR_I18N;
 
     /**
-     * DirecciÛn y nombre del archivo YAML
+     * Direcci√≥n y nombre del archivo YAML
      */
-    private const YAML = 'i18n' . DIRECTORY_SEPARATOR;
+    private const YAML = self::DIR_I18N;
 
     /**
-     * Campo de aplicaciÛn de desarrollo
+     * Campo de aplicaci√≥n de desarrollo
      */
     private const DEV = 'dev';
 
     /**
-     * Campo de aplicaciÛn de producciÛn
+     * Campo de aplicaci√≥n de producci√≥n
      */
     private const PROD = 'prod';
 
     /**
-     * Campo de aplicaciÛn de testeo
+     * Campo de aplicaci√≥n de testeo
      */
     private const TEST = 'test';
 
     /**
-     * Objeto para manejar el cachÈ del sistema
+     * Objeto para manejar el cach√© del sistema
      *
      * @var Cache
      */
     private $cache;
 
+    /**
+     * Ambito en el que corre el sistema
+     *
+     * @var string
+     */
     private $scope;
 
+    /**
+     * Nombre del paquete a usar en el controlador frontal
+     *
+     * @var string
+     */
     private $bundle;
 
+    /**
+     * Ruta f√≠sica del proyecto en el servidor
+     *
+     * @var string
+     */
     private $path_proyect;
 
+    /**
+     * Lenguaje a usar para el sistema
+     *
+     * @var string
+     */
     private $language;
 
+    /**
+     * Constructor de la clase i18n
+     *
+     * @param string $language
+     *            Lenguaje a usar para el sistema
+     * @param string $scope
+     *            Ambito en el que corre el sistema
+     * @param Cache $cache
+     *            Objeto para el manejo de cach√© del sistema
+     * @param string $path_proyect
+     *            Ruta f√≠sica del proyecto en el servidor
+     * @param string|null $bundle
+     *            Nombre del paquete a usar en el controlador frontal
+     */
     public function __construct(string $language, string $scope, Cache $cache, string $path_proyect, ?string $bundle = null)
     {
         $this->language = $language;
@@ -82,11 +125,13 @@ class i18n
     }
 
     /**
+     * Devuelve el mensaje solicitado
      *
      * @param string $text
+     *            Indice del mensaje a usar
      * @param mixed $args
-     *            [opcional]
-     * @return string
+     *            [opcional] Arreglo o cadena de car√°cteres a usar en el mensaje
+     * @return string Cadena de caracteres con el mensaje solicitado
      */
     public function __(string $text, $args = null): string
     {
@@ -100,7 +145,19 @@ class i18n
     }
 
     /**
-     * Devuelve un arreglo con la configuraciÛn del sistema
+     * Establece el lenguaje a usar en el sistema
+     *
+     * @param string $language
+     * @return i18n
+     */
+    public function setLanguage(string $language): i18n
+    {
+        $this->language = $language;
+        return $this;
+    }
+
+    /**
+     * Devuelve un arreglo con la configuraciÔøΩn del sistema
      *
      * @throws ZOEException
      * @return array
@@ -115,19 +172,19 @@ class i18n
                     return Yaml::parseFile($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml');
                 }
             } else {
-                if (apcu_exists(self::NAME_CACHE . $this->bundle . $this->language) === true) {
-                    return apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language);
-                } else if ($this->cache->has(self::CACHE . $this->bundle . $this->language) === true) {
-                    apcu_add(self::NAME_CACHE . $this->bundle . $this->language, (array) json_decode($this->cache->get(self::CACHE . $this->bundle . $this->language), true));
-                    return apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language);
+                if (apcu_exists(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language) === true) {
+                    return apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language);
+                } else if ($this->cache->has(self::DIR_BUNDLE . $this->bundle . self::CACHE . $this->language) === true) {
+                    apcu_add(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language, (array) json_decode($this->cache->get(self::DIR_BUNDLE . $this->bundle . self::CACHE . $this->language), true));
+                    return apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language);
                 } else {
                     if (is_file($this->path_proyect . self::YAML . $this->language . '.yml') === true) {
-                        apcu_add(self::NAME_CACHE . $this->bundle . $this->language, $this->loadBundleDictionaryYaml($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml', Yaml::parseFile($this->path_proyect . self::YAML . $this->language . '.yml')));
+                        apcu_add(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language, $this->loadBundleDictionaryYaml($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml', Yaml::parseFile($this->path_proyect . self::YAML . $this->language . '.yml')));
                     } else {
-                        apcu_add(self::NAME_CACHE . $this->bundle . $this->language, Yaml::parseFile($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml'));
+                        apcu_add(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language, Yaml::parseFile($this->path_proyect . self::DIR_BUNDLE . $this->bundle . self::YAML . $this->language . '.yml'));
                     }
-                    $this->cache->set(self::CACHE . $this->bundle . $this->language, json_encode(apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language), true));
-                    return apcu_fetch(self::NAME_CACHE . $this->bundle . $this->language);
+                    $this->cache->set(self::DIR_BUNDLE . $this->bundle . self::CACHE . $this->language, json_encode(apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language), true));
+                    return apcu_fetch(self::NAME_CACHE . DIRECTORY_SEPARATOR . $this->bundle . $this->language);
                 }
             }
         } catch (ParseException $exc) {
@@ -139,8 +196,10 @@ class i18n
      * Busca en los paquetes del sistema el archivo i18n/en.yml para devolver un arreglo diccionario del idioma
      *
      * @param string $file
+     *            Ruta y archivo donde se encuentra un diccionario
      * @param array $i18nInit
-     * @return array
+     *            Arreglo con diccionario previo
+     * @return array Arreglo con la uni√≥n de los diccioanrios
      */
     protected function loadBundleDictionaryYaml(string $file, array $i18nInit): array
     {

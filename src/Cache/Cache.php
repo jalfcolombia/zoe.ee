@@ -14,7 +14,7 @@ namespace ZoeEE\Cache;
 use ZoeEE\ExceptionHandler\ZOEException;
 
 /**
- * Clase para controlar la caché del sistema
+ * Clase para controlar la cachÃ© del sistema
  *
  * @author Julian Lasso <jalasso69@misena.edu.co>
  * @package ZoeEE
@@ -24,17 +24,17 @@ class Cache
 {
 
     /**
-     * Nombre de la carpeta del caché
+     * Nombre de la carpeta del cachÃ©
      */
     private const DIR = '.cache/';
-    
+
     /**
-     * Extención de los archivos en la caché
+     * ExtenciÃ³n de los archivos en la cachÃ©
      */
     private const EXTENSION = '.cached';
 
     /**
-     * Dirección de donde se encuentre el folder del caché
+     * DirecciÃ³n de donde se encuentre el folder del cachÃ©
      *
      * @var string
      */
@@ -44,9 +44,9 @@ class Cache
      * Constructor de la clase Cache
      *
      * @param string $path
-     *            Dirección de donde se encuentre el folder del caché
+     *            DirecciÃ³n de donde se encuentre el folder del cachÃ©
      * @param string $dir
-     *            Nombre de la carpeta del caché
+     *            Nombre de la carpeta del cachÃ©
      */
     public function __construct(string $path)
     {
@@ -54,7 +54,7 @@ class Cache
     }
 
     /**
-     * Devuelve el path de la caché
+     * Devuelve el path de la cachÃ©
      *
      * @return string
      */
@@ -64,7 +64,7 @@ class Cache
     }
 
     /**
-     * Comprueba que un archivo existe en la caché del sistema
+     * Comprueba que un archivo existe en la cachÃ© del sistema
      *
      * @param string $file
      *            Ruta y nombre del archivo
@@ -76,10 +76,10 @@ class Cache
     }
 
     /**
-     * Establece un archivo con un contenido en caché
+     * Establece un archivo con un contenido en cachÃ©
      *
      * @param string $file
-     *            Ruta y nombre del archivo en caché
+     *            Ruta y nombre del archivo en cachÃ©
      * @param string $content
      *            Contenido a guardar
      * @throws ZOEException
@@ -100,7 +100,7 @@ class Cache
     }
 
     /**
-     * Obtiene el contenido de un archivo en el caché
+     * Obtiene el contenido de un archivo en el cachÃ©
      *
      * @param string $file
      *            Ruta y nombre del archivo
@@ -117,7 +117,7 @@ class Cache
     }
 
     /**
-     * Borra un archivo del caché
+     * Borra un archivo del cachÃ©
      *
      * @param string $file
      * @return bool

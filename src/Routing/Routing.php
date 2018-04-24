@@ -20,7 +20,6 @@ use ZoeEE\ExceptionHandler\ZOEException;
 /**
  * Clase para controlar el sistema de rutas basado en un arhchivo YAML
  *
- *
  * @author Julian Lasso <jalasso69@misena.edu.co>
  * @package ZoEE
  * @subpackage Routing
@@ -28,15 +27,18 @@ use ZoeEE\ExceptionHandler\ZOEException;
 class Routing
 {
 
+    /**
+     * Nombre de la variable en cach√© de la memoria RAM
+     */
     private const NAME_CACHE = 'zoeRouting';
 
     /**
-     * DirecciÛn y nombre de archivo en la cachÈ
+     * Direcci√≥n y nombre de archivo en la cach√©
      */
     private const CACHE = 'Confing' . DIRECTORY_SEPARATOR . 'Routing';
 
     /**
-     * DirecciÛn y nombre del archivo YAML
+     * Direcci√≥n y nombre del archivo YAML
      */
     private const YAML = 'Config' . DIRECTORY_SEPARATOR . 'Routing.yml';
 
@@ -46,22 +48,22 @@ class Routing
     private const BUNDLE = 'Bundle' . DIRECTORY_SEPARATOR;
 
     /**
-     * Campo de aplicaciÛn de desarrollo
+     * Campo de aplicaci√≥n de desarrollo
      */
     private const DEV = 'dev';
 
     /**
-     * Campo de aplicaciÛn de producciÛn
+     * Campo de aplicaci√≥n de producci√≥n
      */
     private const PROD = 'prod';
 
     /**
-     * Campo de aplicaciÛn de testeo
+     * Campo de aplicaci√≥n de testeo
      */
     private const TEST = 'test';
 
     /**
-     * Objeto para manejar el cachÈ del sistema
+     * Objeto para manejar el cach√© del sistema
      *
      * @var Cache
      */
@@ -82,21 +84,21 @@ class Routing
     private $route;
 
     /**
-     * Arreglo asociativo con los par·metos pasados por la URL
+     * Arreglo asociativo con los par√°metos pasados por la URL
      *
      * @var array
      */
     private $params;
 
     /**
-     * Ruta de donde se encuentra el folder de configuraciÛn
+     * Ruta de donde se encuentra el proyecto f√≠sico en el servidor
      *
      * @var string
      */
     private $path_proyect;
 
     /**
-     * Campo de aplicaciÛn del sistema.
+     * Campo de aplicaci√≥n del sistema.
      * Ej: dev, prod o test
      *
      * @var string
@@ -104,42 +106,52 @@ class Routing
     private $scope;
 
     /**
-     * Contiene un valor buleano para saber si la URL es v·lida o no
+     * Contiene un valor booleano para saber si la URL es v√°lida o no
      *
      * @var bool
      */
     private $is_valid;
 
     /**
+     * Nombre del proyecto que se usar√° para los namespaces
+     *
+     * @var string
+     */
+    private $project;
+
+    /**
      * Constructor de la clase Routing
      *
      * @param string|null $path
-     *            Ruta a la que se intenta acceder
+     *            Ruta a la que se intenta acceder (URL)
      * @param Cache $cache
-     *            Objeto para manejar los archivos de la cachÈ
-     * @param string $path_proyect
-     *            Ruta del proyecto fÌsico en el servidor
+     *            Objeto para manejar los archivos de la cach√©
+     * @param string $path_project
+     *            Ruta del proyecto f√≠sico en el servidor
      * @param string $scope
-     *            Campo de aplicaciÛn del sistema (dev, prod o test)
+     *            Campo de aplicaci√≥n del sistema (dev, prod o test)
      */
-    public function __construct(?string $path, Cache $cache, string $path_proyect, string $scope = self::DEV)
+    public function __construct(?string $path, Cache $cache, string $path_project, string $scope = self::DEV)
     {
         $this->params = array();
         $this->route = array();
         $this->path = ($path === null) ? '/' : $path;
         $this->cache = $cache;
-        $this->path_proyect = $path_proyect;
+        $this->path_proyect = $path_project;
         $this->scope = $scope;
         $this->is_valid = $this->solvePath();
     }
 
     /**
-     * Remplaza la ultima apariciÛn en una cadena de texto
-     * 
+     * Remplaza la ultima aparici√≥n en una cadena de texto
+     *
      * @param string $search
+     *            Cadena buscada
      * @param string $replace
+     *            Cadena por la cual se reemplazar√°
      * @param string $string
-     * @return string
+     *            Cadena en la que se debe buscar
+     * @return string Cadena resultante
      */
     private function str_replace_last(string $search, string $replace, string $string): string
     {
@@ -154,7 +166,7 @@ class Routing
      * Resuelve la ruta provista
      *
      * @throws ZOEException
-     * @return bool Verdadero si encontrÛ una ruta en caso contrario devolver· Falso
+     * @return bool Verdadero si encuentra una ruta en caso contrario devolver√° Falso
      */
     private function solvePath(): bool
     {
@@ -182,13 +194,13 @@ class Routing
                     
                     foreach ($arrayRoute as $key => $value) {
                         switch (strpos($value, ':')) {
-                            // no encontrÛ los dos puntos :
+                            // no encontr√≥ los dos puntos :
                             case false:
                                 if ($value === $arrayPath[$key]) {
                                     $cntTmp ++;
                                 }
                                 break;
-                            // si encontrÛ con los dos puntos
+                            // si encontr√≥ con los dos puntos
                             default:
                                 $explode = explode(':', str_replace(array(
                                     '{',
@@ -249,18 +261,18 @@ class Routing
     /**
      * Devuelve el objeto del controlador asignado en la ruta
      *
-     * @return Controller
+     * @return Controller Instancia del controlador
      */
     public function getController(): Controller
     {
-        eval("\$controller = new \\Bundle\\{$this->route['bundle']}\\Controller\\{$this->route['controller']}Controller(\$this->cache);");
+        eval("\$controller = new \\{$this->project}\\Bundle\\{$this->route['bundle']}\\Controller\\{$this->route['controller']}Controller(\$this->cache);");
         return $controller;
     }
-    
+
     /**
      * Devuelve el nombre del paquete
-     * 
-     * @return string
+     *
+     * @return string Nombre del paquete
      */
     public function getBundle(): string
     {
@@ -270,7 +282,7 @@ class Routing
     /**
      * Devuelve vista asignada en la ruta
      *
-     * @return string
+     * @return string Nombre de la vista
      */
     public function getView(): string
     {
@@ -282,9 +294,9 @@ class Routing
     }
 
     /**
-     * Devuelve los par·metros asignados en la ruta
+     * Devuelve los par√°metros asignados en la ruta
      *
-     * @return array
+     * @return array Arreglo con los par√°metros por el m√©todo GET en la ruta
      */
     public function getParams(): array
     {
@@ -292,9 +304,9 @@ class Routing
     }
 
     /**
-     * Devuelve falso o verdadero si encontrÛ o no una ruta v·lida
+     * Devuelve falso o verdadero si encontr√≥ o no una ruta v√°lida
      *
-     * @return bool
+     * @return bool Falso si no encuentra una ruta v√°lida o Verdadero en caso contrario
      */
     public function isValid(): bool
     {
@@ -302,9 +314,9 @@ class Routing
     }
 
     /**
-     * Devuelve un arreglo con los par·metros de la ruta establecida
+     * Devuelve un arreglo con los par√°metros de la ruta establecida
      *
-     * @return array
+     * @return array Arreglo de la ruta consultada
      */
     public function getRoute(): array
     {
@@ -312,10 +324,22 @@ class Routing
     }
 
     /**
+     * Establece el nombre del proyecto para ser usado en los namespaces
+     *
+     * @param string $project
+     *            Nombre del proyecto
+     */
+    public function setProject($project): Routing
+    {
+        $this->project = $project;
+        return $this;
+    }
+
+    /**
      * Devuelve un arreglo con las rutas del sistema
      *
      * @throws ZOEException
-     * @return array
+     * @return array Arreglo de las rutas del sistema
      */
     protected function getRoutingFile(): array
     {
@@ -343,8 +367,10 @@ class Routing
      * Busca en los paquetes del sistema el archivo Config/Routing.yml para devolver un arreglo con las rutas del sistema
      *
      * @param string $path
+     *            Ruta del paquete
      * @param array $routinInit
-     * @return array
+     *            Arreglo con los datos iniciales de las rutas
+     * @return array Arreglo con las rutas del sistema incluidas las de los paqu√©tes
      */
     protected function searchAllFilesYaml(string $path, array $routinInit): array
     {

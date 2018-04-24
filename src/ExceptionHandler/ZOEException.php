@@ -12,7 +12,8 @@
 namespace ZoeEE\ExceptionHandler;
 
 /**
- * 
+ * Clase para manejar las excepciones del sistema
+ *
  * @author Julian Lasso <jalasso69@misena.edu.co>
  * @package ZoeEE
  * @subpackage ExceptionHandler
@@ -31,10 +32,12 @@ class ZOEException extends \Exception
     public const F0002 = 'The type of data indicated (%s) is not valid';
 
     /**
-     * Constrctor de ZOEException
+     * Constructor de la clase ZOEException
      *
      * @param string $message
+     *            Mensaje de la excepción
      * @param string $code
+     *            [opcional] Códio de la excepción
      * @param \Throwable $previous
      */
     public function __construct(string $message = "", string $code = '0', $previous = null)
