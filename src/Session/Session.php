@@ -31,7 +31,7 @@ class Session
      */
     public function __construct(string $name, int $time = 3600)
     {
-        $this->SetName($name)->Start($time);
+        $this->setName($name)->start($time);
     }
 
     /**
@@ -39,25 +39,59 @@ class Session
      *
      * @param string $name
      *            Nombre de la cookie
-     * @return Session
+     * @return Session Instancia de la clase Session
      */
-    public function SetName(string $name): Session
+    public function setName(string $name): Session
     {
         session_name($name);
         return $this;
     }
 
-    public function Has(string $param): bool
+    /**
+     * Establece una variable de sesión
+     *
+     * @param string $param
+     *            Nombre de la variable
+     * @param mixed $value
+     *            Valor de la variable
+     * @return Session Instancia de la clase Session
+     */
+    public function set(string $param, $value): Session
+    {
+        return $this;
+    }
+
+    /**
+     * Evalua la existencia de una variable de sesión
+     *
+     * @param string $param
+     *            Nombre de variable
+     * @return bool Falso si no existe de lo contrario Verdadero
+     */
+    public function has(string $param): bool
     {
         return $_SESSION[$param];
     }
 
-    public function Get(string $param)
+    /**
+     * Devuelve el valor de una variable de sesión
+     *
+     * @param string $param
+     *            Nombre de la variable
+     * @return mixed Valor de la variable de sesión
+     */
+    public function get(string $param)
     {
         return $_SESSION[$param];
     }
 
-    public function Delete($param): Session
+    /**
+     * Borra una variable de sesión
+     *
+     * @param string $param
+     * @return Session
+     */
+    public function delete(string $param): Session
     {
         unset($_SESSION[$param]);
         return $this;
@@ -68,23 +102,42 @@ class Session
      *
      * @return string
      */
-    public function GetName(): string
+    public function getName(): string
     {
         return session_name();
     }
 
-    public function GetId(): string
+    /**
+     * Devuelve el ID de la sesión establecida
+     *
+     * @return string ID de la sesión establecida
+     */
+    public function getId(): string
     {
         return session_id();
     }
 
-    public function SetId(string $id): Session
+    /**
+     * Establece el ID a la sesión presente
+     *
+     * @param string $id
+     *            ID para la sesión presente
+     * @return Session Instancia de la clase Session
+     */
+    public function setId(string $id): Session
     {
         session_id($id);
         return $this;
     }
 
-    public function Start($time): Session
+    /**
+     * Da comienzo a la sesión estableciendo el tiempo de expiración en segundos
+     *
+     * @param int $time
+     *            Tiempo en segundos
+     * @return Session Instancia del objecto Session
+     */
+    public function start(int $time): Session
     {
         session_start(array(
             'cookie_lifetime' => $time
@@ -97,7 +150,7 @@ class Session
      *
      * @return Session
      */
-    public function Destroy(): Session
+    public function destroy(): Session
     {
         session_destroy();
         return $this;

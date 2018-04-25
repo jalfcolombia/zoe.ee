@@ -28,21 +28,21 @@ class Response
 
     /**
      * Arreglo asociativo con los datos para usar en la vista
-     * 
+     *
      * @var array
      */
     private $variables;
 
     /**
      * Nombre de la vista
-     * 
+     *
      * @var string
      */
     private $view;
 
     /**
      * Ruta física del proyecto en el servidor
-     * 
+     *
      * @var string
      */
     private $path;

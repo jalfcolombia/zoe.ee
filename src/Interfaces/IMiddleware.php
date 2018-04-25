@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace ZoeEE\Middleware\Interfaces;
+namespace ZoeEE\Interfaces;
 
 use ZoeEE\Config\Config;
 use ZoeEE\Request\Request;
@@ -25,7 +25,7 @@ use ZoeEE\i18n\i18n;
  * @subpackage Middleware
  * @subpackage Interfaces
  */
-interface IntfcMiddleware
+interface IMiddleware
 {
 
     /**
