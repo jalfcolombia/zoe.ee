@@ -151,9 +151,9 @@ class Request
      *
      * @param string $param
      *            Nombre del parámetro
-     * @return string Valor del parámetro
+     * @return mixed Valor del parámetro
      */
-    public function getParam(string $param): string
+    public function getParam(string $param)
     {
         return $this->post[$param];
     }
