@@ -1,12 +1,19 @@
 <?php
 
 /**
- * This file is part of the ZoeEE package.
+ * Copyright 2018 Servicio Nacional de Aprendizaje - SENA
  *
- * (c) Julian Lasso <jalasso69@misena.edu.co>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 namespace ZoeEE\Session;
@@ -24,10 +31,8 @@ class Session
     /**
      * Constructor de la clase Session
      *
-     * @param string $name
-     *            Nombre de la cookie para manejar la sesión en el cliente
-     * @param int $time
-     *            Tiempo en segundo de duración de la sesión (3600 = 1 hora)
+     * @param string $name Nombre de la cookie para manejar la sesión en el cliente
+     * @param int $time Tiempo en segundo de duración de la sesión (3600 = 1 hora)
      */
     public function __construct(string $name, int $time = 3600)
     {
@@ -37,8 +42,7 @@ class Session
     /**
      * Establece el nombre de la cookie para manejar la sesión
      *
-     * @param string $name
-     *            Nombre de la cookie
+     * @param string $name Nombre de la cookie
      * @return Session Instancia de la clase Session
      */
     public function setName(string $name): Session
@@ -50,10 +54,8 @@ class Session
     /**
      * Establece una variable de sesión
      *
-     * @param string $param
-     *            Nombre de la variable
-     * @param mixed $value
-     *            Valor de la variable
+     * @param string $param Nombre de la variable
+     * @param mixed $value Valor de la variable
      * @return Session Instancia de la clase Session
      */
     public function set(string $param, $value): Session
@@ -64,8 +66,7 @@ class Session
     /**
      * Evalua la existencia de una variable de sesión
      *
-     * @param string $param
-     *            Nombre de variable
+     * @param string $param Nombre de variable
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function has(string $param): bool
@@ -76,8 +77,7 @@ class Session
     /**
      * Devuelve el valor de una variable de sesión
      *
-     * @param string $param
-     *            Nombre de la variable
+     * @param string $param Nombre de la variable
      * @return mixed Valor de la variable de sesión
      */
     public function get(string $param)
@@ -120,8 +120,7 @@ class Session
     /**
      * Establece el ID a la sesión presente
      *
-     * @param string $id
-     *            ID para la sesión presente
+     * @param string $id ID para la sesión presente
      * @return Session Instancia de la clase Session
      */
     public function setId(string $id): Session
@@ -133,8 +132,7 @@ class Session
     /**
      * Da comienzo a la sesión estableciendo el tiempo de expiración en segundos
      *
-     * @param int $time
-     *            Tiempo en segundos
+     * @param int $time Tiempo en segundos
      * @return Session Instancia del objecto Session
      */
     public function start(int $time): Session

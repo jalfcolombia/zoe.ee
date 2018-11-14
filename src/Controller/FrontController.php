@@ -1,12 +1,19 @@
 <?php
 
 /**
- * This file is part of the ZoeEE package.
+ * Copyright 2018 Servicio Nacional de Aprendizaje - SENA
  *
- * (c) Julian Lasso <jalasso69@misena.edu.co>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 namespace ZoeEE\Controller;
@@ -95,10 +102,8 @@ class FrontController
     /**
      * Constructor del controlador frontal
      *
-     * @param string $path
-     *            Ruta del proyecto en el servidor
-     * @param string $scope
-     *            Ambito del entorno
+     * @param string $path Ruta del proyecto en el servidor
+     * @param string $scope Ambito del entorno
      */
     public function __construct(string $path, string $scope)
     {
@@ -108,10 +113,9 @@ class FrontController
             $this->request = new Request();
             $this->response = new Response($path);
             $this->cache = new Cache($path);
-            $this->routing = new Routing($this->request->getServer('PATH_INFO'), $this->cache, $path, $scope);
-            $this->config = new Config($this->cache, $scope, $path, $this->routing->getBundle());
-            $this->routing->setProject($this->config->get('project'));
-            $this->i18n = new i18n($this->config->get('lang'), $scope, $this->cache, $path, $this->routing->getBundle());
+            $this->routing = new Routing($this->request->getServer('PATH_INFO'), $this->cache, $path, $this->request->getServer('REQUEST_METHOD'), $this->request->isAjax(), $scope);
+            $this->config = new Config($this->cache, $scope, $path, $this->routing->getBundle(), $this->routing->getProject());
+            $this->i18n = new i18n($this->config->get('lang'), $scope, $this->cache, $path, $this->routing->getBundle(), $this->routing->getProject());
             $this->session = new Session($this->config->get('session.name'), $this->config->get('session.time'));
         } catch (\ErrorException | \Exception $exc) {
             echo 'File: ' . $exc->getFile() . '<br>';
@@ -131,10 +135,15 @@ class FrontController
     {
         try {
             $controller = $this->routing->getController();
-            $controller->main($this->request, $this->i18n, $this->config, $this->session, $this->routing);
+            if ($this->routing->getAction() === null) {
+                $controller->main($this->request, $this->i18n, $this->config, $this->session, $this->routing);
+            } else {
+                //$action = $this->routing->getAction();
+                $controller->$this->routing->getAction()($this->request, $this->i18n, $this->config, $this->session, $this->routing);
+            }
             $this->response->setView($this->routing->getView())
-                ->setVariables((array) $controller)
-                ->render($this->routing->getBundle() . DIRECTORY_SEPARATOR);
+                ->setVariables((array)$controller)
+                ->render((($this->routing->getProject() === null) ? $this->routing->getBundle() : $this->routing->getProject() . DIRECTORY_SEPARATOR . $this->routing->getBundle()) . DIRECTORY_SEPARATOR);
         } catch (\ErrorException | \Exception $exc) {
             echo 'File: ' . $exc->getFile() . '<br>';
             echo 'Line: ' . $exc->getLine() . '<br>';

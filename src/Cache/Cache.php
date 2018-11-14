@@ -1,12 +1,19 @@
 <?php
 
 /**
- * This file is part of the ZoeEE package.
+ * Copyright 2018 Servicio Nacional de Aprendizaje - SENA
  *
- * (c) Julian Lasso <jalasso69@misena.edu.co>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 namespace ZoeEE\Cache;
@@ -26,12 +33,12 @@ class Cache
     /**
      * Nombre de la carpeta del caché
      */
-    private const DIR = '.cache/';
+    private const DIR = '.cache' . DIRECTORY_SEPARATOR;
 
     /**
      * Extención de los archivos en la caché
      */
-    private const EXTENSION = '.cached';
+    private const EXTENSION = '.cache';
 
     /**
      * Dirección de donde se encuentre el folder del caché
@@ -43,10 +50,8 @@ class Cache
     /**
      * Constructor de la clase Cache
      *
-     * @param string $path
-     *            Dirección de donde se encuentre el folder del caché
-     * @param string $dir
-     *            Nombre de la carpeta del caché
+     * @param string $path Dirección de donde se encuentre el folder del caché
+     * @param string $dir Nombre de la carpeta del caché
      */
     public function __construct(string $path)
     {
@@ -66,8 +71,7 @@ class Cache
     /**
      * Comprueba que un archivo existe en la caché del sistema
      *
-     * @param string $file
-     *            Ruta y nombre del archivo
+     * @param string $file Ruta y nombre del archivo
      * @return bool VERDADERO si el archivo existe, de lo contrario FALSO
      */
     public function has(string $file): bool
@@ -78,10 +82,8 @@ class Cache
     /**
      * Establece un archivo con un contenido en caché
      *
-     * @param string $file
-     *            Ruta y nombre del archivo en caché
-     * @param string $content
-     *            Contenido a guardar
+     * @param string $file Ruta y nombre del archivo en caché
+     * @param string $content Contenido a guardar
      * @throws ZOEException
      */
     public function set(string $file, string $content): void
@@ -102,8 +104,7 @@ class Cache
     /**
      * Obtiene el contenido de un archivo en el caché
      *
-     * @param string $file
-     *            Ruta y nombre del archivo
+     * @param string $file Ruta y nombre del archivo
      * @return string Contenido del archivo
      * @throws ZOEException
      */
