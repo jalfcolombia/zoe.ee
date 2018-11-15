@@ -1,7 +1,7 @@
 {
   "name": "sena/zoe.ee",
   "description": "Nogal (Enterprise Edition) Framework written in PHP7 by the National Learning Service (SENA) for business use.",
-  "version": "0.0.1-alpha",
+  "version": "0.0.5-alpha",
   "type": "project",
   "keywords": [
     "framework",
@@ -14,7 +14,10 @@
     "jalf",
     "jalfcolombia",
     "mvc",
-    "php"
+    "php",
+    "upegui",
+    "imupegui",
+    "iupegui"
   ],
   "homepage": "https://jalfcolombia.github.io/zoe.ee/",
   "readme": "",
