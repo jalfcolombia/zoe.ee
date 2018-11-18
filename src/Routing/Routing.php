@@ -278,6 +278,7 @@ class Routing
                 }
             }
         }
+        $this->route = (isset($routings['otherwise']) === true) ? $routings['otherwise'] : (isset($routings['404']) === true) ? $routings['404'] : $routings['index'];
         return false;
     }
 

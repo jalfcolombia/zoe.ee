@@ -36,6 +36,10 @@ use ZoeEE\i18n\i18n;
 class FrontController
 {
 
+    public const DEV = 'dev';
+    public const PROD = 'prod';
+    public const TEST = 'test';
+
     /**
      * Objeto para el manejo del caché del sistema
      *
