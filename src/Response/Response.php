@@ -131,6 +131,8 @@ class Response
      * Renderiza la vista
      *
      * @param string|null $bundle [opcional] Nombre del paquete donde está la vista
+     * 
+     * @return void
      */
     public function render(?string $bundle = null): void
     {
@@ -138,7 +140,12 @@ class Response
             extract($this->variables);
         }
         
-        if (is_file($this->path . self::DIR . $bundle . $this->view . '.template.php') === true and $bundle !== null) {
+        if (\strtolower($this->view) === 'json' and isset($json_data) === true) {
+            header("Content-type: application/json; charset=utf-8");
+            echo json_encode($json_data);
+        } else if (\strtolower($this->view) === 'json' and isset($json_data) === false) {
+            // DISPARA ERROR DE QUE NO EXISTE $json_data
+        } else if (is_file($this->path . self::DIR . $bundle . $this->view . '.template.php') === true and $bundle !== null) {
             require $this->path . self::DIR . $bundle . $this->view . '.template.php';
         } else {
             require $this->path . self::DIR . $this->view . '.template.php';
