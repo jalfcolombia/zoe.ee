@@ -362,6 +362,16 @@ class Routing
         return $this->route;
     }
 
+    public function getMiddlewareBefore()
+    {
+        return $this->route['middleware']['before'];
+    }
+
+    public function getMiddlewareAfter()
+    {
+        return $this->route['middleware']['after'];
+    }
+
     /**
      * Devuelve un arreglo con las rutas del sistema
      *

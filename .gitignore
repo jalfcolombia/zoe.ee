@@ -7,3 +7,5 @@ composer.lock
 ..gitignore.swp
 .idea/
 nbproject/
+.DS_Store
+/tmp
