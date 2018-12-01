@@ -138,16 +138,23 @@ class FrontController
     public function run(): void
     {
         try {
+
+            $this->executePreMiddleware();
+            $this->executeController();
+            $this->executePostMiddleware();
+            $this->response();
+
             $controller = $this->routing->getController();
             if ($this->routing->getAction() === null) {
                 $controller->main($this->request, $this->i18n, $this->config, $this->session, $this->routing);
             } else {
-                //$action = $this->routing->getAction();
                 $controller->$this->routing->getAction()($this->request, $this->i18n, $this->config, $this->session, $this->routing);
             }
+
             $this->response->setView($this->routing->getView())
                 ->setVariables((array)$controller)
                 ->render((($this->routing->getProject() === null) ? $this->routing->getBundle() : $this->routing->getProject() . DIRECTORY_SEPARATOR . $this->routing->getBundle()) . DIRECTORY_SEPARATOR);
+
         } catch (\ErrorException | \Exception $exc) {
             echo 'File: ' . $exc->getFile() . '<br>';
             echo 'Line: ' . $exc->getLine() . '<br>';

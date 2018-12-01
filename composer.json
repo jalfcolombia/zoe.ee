@@ -23,8 +23,7 @@
   "readme": "",
   "time": "",
   "license": "Apache-2.0",
-  "authors": [
-    {
+  "authors": [{
       "name": "Julian Andrés Lasso Figueroa",
       "email": "jalasso69@misena.edu.co",
       "role": "Developer"
