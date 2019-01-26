@@ -14,6 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Cache
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Cache;
@@ -23,9 +31,11 @@ use ZoeEE\ExceptionHandler\ZOEException;
 /**
  * Clase para controlar la caché del sistema
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Cache
+ * @category Cache
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 class Cache
 {
@@ -51,7 +61,6 @@ class Cache
      * Constructor de la clase Cache
      *
      * @param string $path Dirección de donde se encuentre el folder del caché
-     * @param string $dir Nombre de la carpeta del caché
      */
     public function __construct(string $path)
     {
@@ -72,6 +81,7 @@ class Cache
      * Comprueba que un archivo existe en la caché del sistema
      *
      * @param string $file Ruta y nombre del archivo
+     *
      * @return bool VERDADERO si el archivo existe, de lo contrario FALSO
      */
     public function has(string $file): bool
@@ -82,9 +92,12 @@ class Cache
     /**
      * Establece un archivo con un contenido en caché
      *
-     * @param string $file Ruta y nombre del archivo en caché
+     * @param string $file    Ruta y nombre del archivo
      * @param string $content Contenido a guardar
+     *
      * @throws ZOEException
+     *
+     * @return void
      */
     public function set(string $file, string $content): void
     {
@@ -105,24 +118,30 @@ class Cache
      * Obtiene el contenido de un archivo en el caché
      *
      * @param string $file Ruta y nombre del archivo
-     * @return string Contenido del archivo
+     *
      * @throws ZOEException
+     *
+     * @return string Contenido del archivo
      */
     public function get(string $file): string
     {
         if ($this->has($file) === false) {
             throw new ZOEException(ZOEException::F0001, 'F0001');
         } else {
-            return file_get_contents($this->path . self::DIR . $file . self::EXTENSION);
+            return file_get_contents(
+                $this->path . self::DIR . $file . self::EXTENSION
+            );
         }
     }
 
     /**
      * Borra un archivo del caché
      *
-     * @param string $file
-     * @return bool
+     * @param string $file Ruta y nombre del archivo
+     *
      * @throws ZOEException
+     *
+     * @return bool
      */
     public function delete(string $file): bool
     {

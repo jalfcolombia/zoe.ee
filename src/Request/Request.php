@@ -14,6 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Request
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Request;
@@ -21,9 +29,11 @@ namespace ZoeEE\Request;
 /**
  * Clase para manejar las peticiones al sistema
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Request
+ * @category Request
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 class Request
 {
@@ -94,7 +104,7 @@ class Request
         if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'PUT') {
             parse_str(file_get_contents("php://input"), $this->put);
             $this->delete = array();
-        } else if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'DELETE') {
+        } elseif (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'DELETE') {
             parse_str(file_get_contents("php://input"), $this->delete);
             $this->put = array();
         }
@@ -111,13 +121,20 @@ class Request
      */
     public function isAjax(): bool
     {
-        return isset($this->server['HTTP_X_REQUESTED_WITH']) === true && strtolower($this->server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        if (isset($this->server['HTTP_X_REQUESTED_WITH']) === true and
+            strtolower($this->server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+        ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
      * Evalua la existencia de una parámetro procedente del método GET
      *
      * @param string $param Nombre de la variable
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasQuery(string $param): bool
@@ -129,6 +146,7 @@ class Request
      * Obtiene el valor de un parámetro procedente del método GET
      *
      * @param string $param Nombre del parámetro
+     *
      * @return string Valor del parámetro
      */
     public function getQuery(string $param): string
@@ -140,6 +158,7 @@ class Request
      * Borra un parámetro procediente del método GET
      *
      * @param string $param Nombre del parámetro
+     *
      * @return Request Instancia del objeto Request
      */
     public function deleteQuery(string $param): Request
@@ -152,6 +171,7 @@ class Request
      * Evalua la existencia de una parámetro procedente del método POST
      *
      * @param string $param Nombre del parámetro
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasParam(string $param): bool
@@ -163,6 +183,7 @@ class Request
      * Obtiene el valor de un parámetro procedente del método POST
      *
      * @param string $param Nombre del parámetro
+     *
      * @return mixed Valor del parámetro
      */
     public function getParam(string $param)
@@ -174,6 +195,7 @@ class Request
      * Borra un parámetro procediente del método POST
      *
      * @param string $param Nombre del parámetro
+     *
      * @return Request Instancia del objeto Request
      */
     public function deleteParam(string $param): Request
@@ -186,6 +208,7 @@ class Request
      * Evalua la existencia de una parámetro procedente del método PUT
      *
      * @param string $param Nombre del parámetro
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasPut(string $param): bool
@@ -197,6 +220,7 @@ class Request
      * Obtiene el valor de un parámetro procedente del método PUT
      *
      * @param string $param Nombre del parámetro
+     *
      * @return string Valor del parámetro
      */
     public function getPut(string $param): string
@@ -208,6 +232,7 @@ class Request
      * Borra un parámetro procediente del método PUT
      *
      * @param string $param Nombre del parámetro
+     *
      * @return Request Instancia del objeto Request
      */
     public function deletePut(string $param): Request
@@ -220,6 +245,7 @@ class Request
      * Evalua la existencia de una parámetro procedente del método DELETE
      *
      * @param string $param Nombre del parámetro
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasDelete(string $param): bool
@@ -231,6 +257,7 @@ class Request
      * Obtiene el valor de un parámetro procedente del método DELETE
      *
      * @param string $param Nombre del parámetro
+     *
      * @return string Valor del parámetro
      */
     public function getDelete(string $param): string
@@ -242,6 +269,7 @@ class Request
      * Borra un parámetro procediente del método DELETE
      *
      * @param string $param Nombre del parámetro
+     *
      * @return Request Instancia del objeto Request
      */
     public function deleteDelete(string $param): Request
@@ -251,9 +279,11 @@ class Request
     }
 
     /**
-     * Evalua la existencia de una parámetro procedente de las cabeceras de la petición al sistema
+     * Evalua la existencia de una parámetro procedente de las cabeceras de la
+     * petición al sistema
      *
      * @param string $param Nombre del parámetro
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasHeader(string $param): bool
@@ -262,9 +292,11 @@ class Request
     }
 
     /**
-     * Obtiene el valor de un parámetro procedente de las cabeceras de la petición al sistema
+     * Obtiene el valor de un parámetro procedente de las cabeceras de la
+     * petición al sistema
      *
      * @param string $param Nombre del parámetro
+     *
      * @return string Valor del parámetro
      */
     public function getHeader(string $param): string
@@ -276,6 +308,7 @@ class Request
      * Borra un parámetro procediente de las cabeceras de la petición al sistema
      *
      * @param string $param Nombre del parámetro
+     *
      * @return Request Instancia del objeto Request
      */
     public function deleteHeader(string $param): Request
@@ -288,6 +321,7 @@ class Request
      * Evalua la existencia de una cookie procedente de la petición al sistema
      *
      * @param string $param Nombre de la cookie
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasCookie(string $param): bool
@@ -299,6 +333,7 @@ class Request
      * Obtiene el valor de una cookie procedente de la petición al sistema
      *
      * @param string $param Nombre de la cookie
+     *
      * @return string Valor de la cookie
      */
     public function getCookie(string $param): string
@@ -310,6 +345,7 @@ class Request
      * Borra una cookie procedente de la petición al sistema
      *
      * @param string $param Nombre de la cookie
+     *
      * @return Request Instancia del objeto Request
      */
     public function deleteCookie(string $param): Request
@@ -322,6 +358,7 @@ class Request
      * Evalua la existencia de un archivo procedente de la petición al sistema
      *
      * @param string $param Nombre del archivo
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasFile(string $file): bool
@@ -330,9 +367,11 @@ class Request
     }
 
     /**
-     * Obtiene el arreglo con los datos del archivo procedente de la petición al sistema
+     * Obtiene el arreglo con los datos del archivo procedente de la
+     * petición al sistema
      *
      * @param string $param Nombre del archivo
+     *
      * @return array|null Arreglo con información del archivo
      */
     public function getFile(string $file): ?array
@@ -344,6 +383,7 @@ class Request
      * Borra un archivo procedente de la petición al sistema
      *
      * @param string $param Nombre del archivo
+     *
      * @return Request Instancia del objeto Request
      */
     public function deleteFile(string $file): Request
@@ -353,9 +393,11 @@ class Request
     }
 
     /**
-     * Evalua la existencia de una variable procedente de las variables del servidor resultantes de la petición al sistema
+     * Evalua la existencia de una variable procedente de las variables
+     * del servidor resultantes de la petición al sistema
      *
      * @param string $param Nombre del parámetro
+     *
      * @return bool Falso si no existe de lo contrario Verdadero
      */
     public function hasServer(string $param): bool
@@ -364,9 +406,11 @@ class Request
     }
 
     /**
-     * Obtiene el valor de una variable del servidor resultante de la petición al sistema
+     * Obtiene el valor de una variable del servidor resultante de la
+     * petición al sistema
      *
      * @param string $param Nombre del parámetro
+     *
      * @return string Valor del parámetro
      */
     public function getServer(string $server): ?string

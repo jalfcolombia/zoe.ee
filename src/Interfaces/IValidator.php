@@ -14,6 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Interfaces
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Interfaces;
@@ -21,9 +29,12 @@ namespace ZoeEE\Interfaces;
 /**
  * Interfaz para los validadores personalizados
  *
- * @author Julián Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Interfaces
+ * @category   Interfaces
+ * @package    ZoeEE
+ * @subpackage Validator
+ * @author     Julian Lasso <jalasso69@misena.edu.co>
+ * @license    https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link       https://github.com/jalfcolombia/zoe.ee
  */
 interface IValidator
 {
@@ -31,8 +42,9 @@ interface IValidator
     /**
      * Función principal para un validador personalizado
      *
-     * @param mixed $value Valor principal a validar
-     * @param array [opcional] $params Parámetros necesarios para la validación
+     * @param mixed $value  Valor principal a validar
+     * @param array $params [opcional] Parámetros necesarios para la validación
+     *
      * @return bool VERDADERO si cumple con la validación, FALSO si no cumple con la validación.
      */
     public function validate($value, array $params = array());

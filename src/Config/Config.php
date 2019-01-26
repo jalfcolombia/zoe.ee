@@ -14,41 +14,50 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Config
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Config;
 
-use ZoeEE\Cache\Cache;
 use ZoeEE\Helper\Helper;
 use ZoeEE\ExceptionHandler\ZOEException;
 
 /**
  * Clase para manejar la configuración del sistema y los paquetes del proyecto
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Config
- * @example El siguiente es un ejemplo básico de la estructura YAML del archivo Config.yml
- *          project: testZoeEE
- *          url: localhost/TestZoezoe.ee/Public/
- *          lang: en
- *          session:
- *          --name: TestSessionZoeEE
- *          --time: 3600
- *          public:
- *          --path: Public
- *          --css: css
- *          --javascript: js
- *          --images: img
- *          --upload: upload
- *          --download: download
- *          db:
- *          --driver: pgsql
- *          --host: localhost
- *          --port: 5432
- *          --user: postgres
- *          --password: 12345
- *          --database: db_proyecto
+ * @category Config
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
+ * @example  El siguiente es un ejemplo básico de la estructura YAML
+ *           del archivo Config.yml
+ *           url: localhost/TestZoezoe.ee/Public/
+ *           lang: en
+ *           session:
+ *           ..name: TestSessionZoeEE
+ *           ..time: 3600 # en minutos 3600 = 1 hora
+ *           public:
+ *           ..path: Public
+ *           ..css: css
+ *           ..javascript: js
+ *           ..images: img
+ *           ..upload: upload
+ *           ..download: download
+ *           db:
+ *           ..driver: pgsql
+ *           ..host: localhost
+ *           ..port: 5432
+ *           ..user: postgres
+ *           ..password: 12345
+ *           ..database: db_proyecto
  */
 class Config
 {
@@ -59,7 +68,8 @@ class Config
     private const DIR_BUNDLE = 'Bundle' . DIRECTORY_SEPARATOR;
 
     /**
-     * Nombre del directorio donde se aloja la configuración general y de los paquetes
+     * Nombre del directorio donde se aloja la configuración general y
+     * de los paquetes
      */
     private const DIR_CONFIG = 'Config' . DIRECTORY_SEPARATOR;
 
@@ -77,28 +87,6 @@ class Config
      * Dirección y nombre del archivo YAML
      */
     private const YAML = 'Config.yml';
-
-    /**
-     * Campo de aplicación de desarrollo
-     */
-    private const DEV = 'dev';
-
-    /**
-     * Campo de aplicación de producción
-     */
-    private const PROD = 'prod';
-
-    /**
-     * Campo de aplicación de testeo
-     */
-    private const TEST = 'test';
-
-    /**
-     * Objeto para manejar el caché del sistema
-     *
-     * @var Cache
-     */
-    private $cache;
 
     /**
      * Ambito en el que se ejecuta el proyecto.
@@ -122,22 +110,35 @@ class Config
      */
     private $path_project;
 
+    /**
+     * Nombre del proyecto
+     *
+     * @var string
+     */
     private $project;
 
+    /**
+     * Variable para manejar el objeto Helper
+     *
+     * @var Helper
+     */
     private $helper;
 
     /**
      * Constructor de la clase Config
      *
-     * @param Cache $cache Objeto para manejar la caché del sistema.
-     * @param string $scope Ambito en el que se ejecuta el proyecto. Ej: dev, proc o test
+     * @param string $scope        Ambito en el que se ejecuta el proyecto.
+     *                             Ej: dev, proc o test
      * @param string $path_project Ruta física del proyecto en el servidor
-     * @param string $bundle Nombre del paquete a procesar
-     * @param string $project [opcional] Nombre del proyecto a procesar
+     * @param string $bundle       Nombre del paquete a procesar
+     * @param string $project      [opcional] Nombre del proyecto a procesar
      */
-    public function __construct(Cache $cache, string $scope, string $path_project, string $bundle, ?string $project = null)
-    {
-        $this->cache = $cache;
+    public function __construct(
+        string $scope,
+        string $path_project,
+        string $bundle,
+        ? string $project = null
+    ) {
         $this->scope = $scope;
         $this->bundle = $bundle . DIRECTORY_SEPARATOR;
         $this->path_project = $path_project;
@@ -146,17 +147,20 @@ class Config
     }
 
     /**
-     * Devuelve el valor del parámetro de configuración.<br>
+     * Devuelve el valor del parámetro de configuración.
      * Ejemplo: url, public.path, db.driver
      *
-     * @param string $param Nombre del parámetro de configuración
-     * @return mixed Valor contenido en el parámetro de configuración
+     * @param string $param Nombre del parámetro
+     *
+     * @return mixed Valor contenido en el parámetro
      */
     public function get(string $param)
     {
         $answer = null;
         $key = "['" . str_replace('.', "']['", $param) . "']";
-        eval('$answer = (isset($this->getConfig()' . $key . ')) ? $this->getConfig()' . $key . ' : null;');
+        $eval = '$answer = (isset($this->getConfig()' . $key . ')) ';
+        $eval .= '? $this->getConfig()' . $key . ' : null;';
+        eval($eval);
         return $answer;
     }
 
@@ -164,30 +168,77 @@ class Config
      * Devuelve un arreglo con la configuración del sistema
      *
      * @throws ZOEException
-     * @return array Arreglo con la figuración del sistema más la configuración del paquete a usar
+     *
+     * @return array Arreglo con la figuración del sistema más la configuración
+     *               del paquete a usar
      */
     protected function getConfig(): array
     {
         $data = array(
-            Helper::GLOBAL => array(
-                Helper::FILE_YAML => $this->path_project . self::DIR_CONFIG . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE . $this->path_project . self::DIR_CONFIG . self::CACHE,
+            Helper::GLODAL => array(
+                Helper::FILE_YAML => $this->path_project
+                    . self::DIR_CONFIG
+                    . self::YAML,
+                Helper::APCU_KEY => self::NAME_CACHE
+                    . $this->path_project
+                    . self::DIR_CONFIG . self::CACHE,
                 Helper::FILE_CACHE => self::DIR_CONFIG . self::CACHE
             ),
             Helper::BUNDLE => array(
-                Helper::FILE_YAML => $this->path_project . self::DIR_BUNDLE. $this->bundle . self::DIR_CONFIG . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE . $this->path_project . self::DIR_BUNDLE . $this->bundle . self::DIR_CONFIG . self::CACHE,
-                Helper::FILE_CACHE => self::DIR_BUNDLE . $this->bundle . self::DIR_CONFIG . self::CACHE
+                Helper::FILE_YAML => $this->path_project
+                    . self::DIR_BUNDLE
+                    . $this->bundle
+                    . self::DIR_CONFIG
+                    . self::YAML,
+                Helper::APCU_KEY => self::NAME_CACHE
+                    . $this->path_project
+                    . self::DIR_BUNDLE
+                    . $this->bundle
+                    . self::DIR_CONFIG . self::CACHE,
+                Helper::FILE_CACHE => self::DIR_BUNDLE
+                    . $this->bundle
+                    . self::DIR_CONFIG
+                    . self::CACHE
             ),
             Helper::PROJECT => array(
-                Helper::FILE_YAML => $this->path_project . self::DIR_BUNDLE . $this->project . DIRECTORY_SEPARATOR . self::DIR_CONFIG . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE . $this->path_project . self::DIR_BUNDLE . $this->project . DIRECTORY_SEPARATOR . self::DIR_CONFIG . self::CACHE,
-                Helper::FILE_CACHE => self::DIR_BUNDLE . $this->project . DIRECTORY_SEPARATOR . self::DIR_CONFIG . self::CACHE
+                Helper::FILE_YAML => $this->path_project
+                    . self::DIR_BUNDLE
+                    . $this->project . DIRECTORY_SEPARATOR
+                    . self::DIR_CONFIG
+                    . self::YAML,
+                Helper::APCU_KEY => self::NAME_CACHE
+                    . $this->path_project
+                    . self::DIR_BUNDLE
+                    . $this->project . DIRECTORY_SEPARATOR
+                    . self::DIR_CONFIG
+                    . self::CACHE,
+                Helper::FILE_CACHE => self::DIR_BUNDLE
+                    . $this->project . DIRECTORY_SEPARATOR
+                    . self::DIR_CONFIG
+                    . self::CACHE
             ),
             Helper::PROJECT_BUNDLE => array(
-                Helper::FILE_YAML => $this->path_project . self::DIR_BUNDLE . $this->project . DIRECTORY_SEPARATOR . self::DIR_BUNDLE . $this->bundle . self::DIR_CONFIG . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE . $this->path_project . self::DIR_BUNDLE . $this->project . DIRECTORY_SEPARATOR . self::DIR_BUNDLE . $this->bundle . self::DIR_CONFIG . self::CACHE,
-                Helper::FILE_CACHE => self::DIR_BUNDLE . $this->project . DIRECTORY_SEPARATOR . self::DIR_BUNDLE . $this->bundle . self::DIR_CONFIG . self::CACHE
+                Helper::FILE_YAML => $this->path_project
+                    . self::DIR_BUNDLE
+                    . $this->project . DIRECTORY_SEPARATOR
+                    . self::DIR_BUNDLE
+                    . $this->bundle
+                    . self::DIR_CONFIG
+                    . self::YAML,
+                Helper::APCU_KEY => self::NAME_CACHE
+                    . $this->path_project
+                    . self::DIR_BUNDLE
+                    . $this->project . DIRECTORY_SEPARATOR
+                    . self::DIR_BUNDLE
+                    . $this->bundle
+                    . self::DIR_CONFIG
+                    . self::CACHE,
+                Helper::FILE_CACHE => self::DIR_BUNDLE
+                    . $this->project . DIRECTORY_SEPARATOR
+                    . self::DIR_BUNDLE
+                    . $this->bundle
+                    . self::DIR_CONFIG
+                    . self::CACHE
             )
         );
         return $this->helper->getSerialFiles($data, $this->scope, $this->project);

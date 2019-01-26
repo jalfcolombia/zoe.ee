@@ -14,23 +14,34 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Controller
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Controller;
 
-use ZoeEE\Cache\Cache;
-use ZoeEE\Request\Request;
-use ZoeEE\Config\Config;
-use ZoeEE\Session\Session;
 use ZoeEE\i18n\i18n;
+use ZoeEE\Cache\Cache;
+use ZoeEE\Config\Config;
+use ZoeEE\Request\Request;
 use ZoeEE\Routing\Routing;
+use ZoeEE\Session\Session;
+use ZoeEE\Controller\Controller;
 
 /**
  * Clase abstracta para manejar los controladores del proyecto
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Controller
+ * @category Controller
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 abstract class Controller
 {
@@ -53,12 +64,14 @@ abstract class Controller
      * Clase abstracta principal para todos los controladores
      *
      * @param Request $request Objeto para el manejo de las solicitudes al sistema
-     * @param i18n $i18n Objeto para manejar la internacionalización de los mensajes del sistema
-     * @param Config $config Objeto para manejar la configuración del sistema
+     * @param i18n    $i18n    Objeto para manejar la internacionalización de los mensajes del sistema
+     * @param Config  $config  Objeto para manejar la configuración del sistema
      * @param Session $session Objeto para manejar las sesiones del sistema
      * @param Routing $routing Objeto para manejar y controlar las rutas del sistema
+     *
+     * @return void
      */
-    abstract function main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
+    abstract public function main(Request $request, i18n $i18n, Config $config, Session $session, Routing $routing);
 
     /**
      * Constructor de todos los controladores del sistema
@@ -85,6 +98,7 @@ abstract class Controller
      * Cambia la vista predeterminada en el routing
      *
      * @param string $view Nombre de la vista a usar
+     *
      * @return Controller
      */
     protected function changeView(string $view): Controller

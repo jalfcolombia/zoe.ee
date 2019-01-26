@@ -14,6 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category ExceptionHandler
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\ExceptionHandler;
@@ -21,36 +29,61 @@ namespace ZoeEE\ExceptionHandler;
 /**
  * Clase para manejar las excepciones del sistema
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage ExceptionHandler
+ * @category ExceptionHandler
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 class ZOEException extends \Exception
 {
 
     /**
-     * Indica que el archivo no existe
+     * Mensaje para indicar que el archivo no existe
      */
     public const F0001 = 'The indicated file does not exist';
+
+    /**
+     * Mensaje para indicar que el archivo no existe
+     */
     public const F0001_MESSAGE = 'The indicated file does not exist';
+
+    /**
+     * Código para indicar que el archivo no existe
+     */
     public const F0001_CODE = 'F0001';
 
     /**
-     * Indica un tipo de dato indeterminado
+     * Mensaje para idicar un tipo de dato indeterminado
      */
     public const F0002 = 'The type of data indicated (%s) is not valid';
+
+    /**
+     * Mensaje para idicar un tipo de dato indeterminado
+     */
     public const F0002_MESSAGE = 'The type of data indicated (%s) is not valid';
+
+    /**
+     * Código para idicar un tipo de dato indeterminado
+     */
     public const F0002_CODE = 'F0002';
 
+    /**
+     * Indica que el archivo de configuración global no existe
+     */
     public const F0003_MESSAGE = 'The global configuration file does not exist';
+
+    /**
+     * Código para indicar que el archivo de configuración global no existe
+     */
     public const F0003_CODE = 'F0003';
 
     /**
      * Constructor de la clase ZOEException
      *
-     * @param string $message Mensaje de la excepción
-     * @param string $code [opcional] Códio de la excepción
-     * @param \Throwable $previous
+     * @param string     $message  Mensaje de la excepción
+     * @param string     $code     Códio de la excepción. Por defecto es cero
+     * @param \Throwable $previous [opcional]
      */
     public function __construct(string $message = "", string $code = '0', $previous = null)
     {

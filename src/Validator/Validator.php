@@ -14,6 +14,14 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Validator
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Validator;
@@ -21,9 +29,11 @@ namespace ZoeEE\Validator;
 /**
  * Clase para realizar validaciones en formularios o similares
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Validator
+ * @category Validator
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 class Validator
 {
@@ -110,8 +120,9 @@ class Validator
     /**
      * Establece un error a un input determinado
      *
-     * @param string $input Nombre de para quien es el error
+     * @param string $input   Nombre de para quien es el error
      * @param string $message Mensaje de error
+     *
      * @return Validator
      */
     protected function setError(string $input, string $message): Validator
@@ -121,7 +132,7 @@ class Validator
     }
 
     /**
-     * Método principal para realizar la validación, el cual devolverá<br>
+     * Método principal para realizar la validación, el cual devolverá
      * VERDADERO si la validación pasó totalmente o de lo contrario, devolverá FALSO
      *
      * @return bool
@@ -134,7 +145,6 @@ class Validator
             for ($x = 0; $x < $cnt; $x++) {
                 $flag = true;
                 switch ($validations[$x]['type']) {
-
                     // IS_NUMBER
                     case 0:
                         if (is_numeric($validations['value']) === false) {
@@ -142,7 +152,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // IS_EQUAL
                     case 1:
                         if (!($validations['value'] == $validations[$x]['otherValue'])) {
@@ -150,7 +159,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // IS_NOT_EQUAL
                     case 2:
                         if ($validations['value'] == $validations[$x]['otherValue']) {
@@ -158,7 +166,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // PATTERN
                     case 3:
                         if (!preg_match($validations[$x]['pattern'], $validations['value'])) {
@@ -166,7 +173,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // IS_EMAIL
                     case 4:
                         if (filter_var($validations['value'], FILTER_VALIDATE_EMAIL) === false) {
@@ -174,7 +180,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // IS_NULL
                     case 5:
                         if (strlen($validations['value']) > 0) {
@@ -182,7 +187,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // IS_NOT_NULL
                     case 6:
                         if (is_null($validations['value']) === true or $validations['value'] === '') {
@@ -190,7 +194,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // EXISTS_IN_DATABASE
                     case 7:
                         if ($validations[$x]['answer'] === true) {
@@ -198,7 +201,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // BOOLEAN_TRUE
                     case 8:
                         if ($validations[$x]['answer'] === true) {
@@ -206,7 +208,6 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // BOOLEAN_FALSE
                     case 9:
                         if ($validations[$x]['answer'] === false) {
@@ -214,10 +215,12 @@ class Validator
                             $flagCnt++;
                         }
                         break;
-
                     // CUSTOM
                     case 10:
-                        if ($validations[$x]['class']->validate($validations['value'], $validations[$x]['params']) === false) {
+                        if ($validations[$x]['class']->validate(
+                            $validations['value'],
+                            $validations[$x]['params']
+                        ) === false) {
                             $flag = false;
                             $flagCnt++;
                         }

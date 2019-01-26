@@ -14,16 +14,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Validator
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Validator;
 
-/**
+ /**
  * Clase para realizar validación de datos
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Validator
+ * @category Validator
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 class Validation extends Validator
 {
@@ -47,9 +57,10 @@ class Validation extends Validator
 
     /**
      * Método para iniciar una nueva validación
-     * 
-     * @param string $name Nombre del la entrada a validar
-     * @param mixed $value Valor a validar
+     *
+     * @param string $name  Nombre del la entrada a validar
+     * @param mixed  $value Valor a validar
+     *
      * @return Validation Instancia del objeto Validation
      */
     public function newValidation(string $name, $value = null): Validation
@@ -63,8 +74,9 @@ class Validation extends Validator
 
     /**
      * Validación del tipo ¿el valor será numérico?
-     * 
+     *
      * @param string $error_message Mensaje de error
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function isNumber(string $error_message): Validation
@@ -78,9 +90,10 @@ class Validation extends Validator
 
     /**
      * Validación del tipo ¿el valor principal será igual al valor secundario?
-     * 
-     * @param mixed $other_value Valor secundario a comprar
+     *
+     * @param mixed  $other_value   Valor secundario a comprar
      * @param string $error_message Mensaje de error
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function isEqual($other_value, string $error_message): Validation
@@ -95,9 +108,10 @@ class Validation extends Validator
 
     /**
      * Validación del tipo ¿el valor principal no es igual al valor secundario?
-     * 
-     * @param mixed $other_value Valor secundario a comprar
+     *
+     * @param mixed  $other_value   Valor secundario a comprar
      * @param string $error_message Mensaje de error
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function isNotEqual($other_value, string $error_message): Validation
@@ -112,9 +126,10 @@ class Validation extends Validator
 
     /**
      * Validación por medio de una expresión regular
-     * 
-     * @param string $pattern Patrón de expresión regular
+     *
+     * @param string $pattern       Patrón de expresión regular
      * @param string $error_message Mensaje de error
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function pattern(string $pattern, string $error_message): Validation
@@ -129,8 +144,9 @@ class Validation extends Validator
 
     /**
      * Validación de un correo electrónico
-     * 
+     *
      * @param string $error_message Mensaje de error
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function isEmail(string $error_message): Validation
@@ -144,8 +160,9 @@ class Validation extends Validator
 
     /**
      * Validación del tipo ¿el valor princial es nulo?
-     * 
+     *
      * @param string $error_message Mensaje de error
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function isNull(string $error_message): Validation
@@ -159,8 +176,9 @@ class Validation extends Validator
 
     /**
      * Validación del tipo ¿el valor principal no será nulo?
-     * 
+     *
      * @param string $error_message Mensaje de error
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function isNotNull(string $error_message): Validation
@@ -174,9 +192,10 @@ class Validation extends Validator
 
     /**
      * Validación del tipo ¿el valor existe en base de datos?
-     * 
+     *
      * @param string $error_message Mensaje de error
-     * @param bool $answer Valor falso o verdero
+     * @param bool   $answer        Valor falso o verdero
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function existsInDataBase(string $error_message, bool $answer): Validation
@@ -191,9 +210,10 @@ class Validation extends Validator
 
     /**
      * Validación basada en un dato booleano VERDADERO
-     * 
+     *
      * @param string $error_message Mensaje de error
-     * @param bool $answer Valor falso o verdero
+     * @param bool   $answer        Valor falso o verdero
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function booleanTrue(string $error_message, bool $answer): Validation
@@ -210,7 +230,8 @@ class Validation extends Validator
      * Validación basada en un dato booleano FALSO
      *
      * @param string $error_message Mensaje de error
-     * @param bool $answer Valor falso o verdero
+     * @param bool   $answer        Valor falso o verdero
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function booleanFalse(string $error_message, bool $answer): Validation
@@ -225,10 +246,11 @@ class Validation extends Validator
 
     /**
      * Validación personalizada basda en una clase con interfaz IValidator
-     * 
+     *
      * @param string $error_message Mensaje de error
-     * @param object $class Instancia de la clase de validación
-     * @param array $params Arreglo de parámetros a usar en la clase
+     * @param object $class         Instancia de la clase de validación
+     * @param array  $params        [opcional] Arreglo de parámetros a usar en la clase
+     *
      * @return Validation Instancia de la clase Validation
      */
     public function custom(string $error_message, object $class, array $params = array()): Validation

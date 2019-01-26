@@ -14,16 +14,26 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * PHP version 7.2
+ *
+ * @category Response
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 
 namespace ZoeEE\Response;
 
-/**
+ /**
  * Clase para manejar la respuesta al cliente
  *
- * @author Julian Lasso <jalasso69@misena.edu.co>
- * @package ZoeEE
- * @subpackage Response
+ * @category Response
+ * @package  ZoeEE
+ * @author   Julian Lasso <jalasso69@misena.edu.co>
+ * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
+ * @link     https://github.com/jalfcolombia/zoe.ee
  */
 class Response
 {
@@ -57,8 +67,8 @@ class Response
     /**
      * Constructor de la clase Response
      *
-     * @param string $path Ruta física del proyecto en el servidor
-     * @param string $view [opcional] Nombre de la vista a usar
+     * @param string $path     Ruta física del proyecto en el servidor
+     * @param string $view     [opcional] Nombre de la vista a usar
      * @param array $variables [opcional] Arreglo asociativo con los datos para usar en la vista
      */
     public function __construct(string $path, string $view = null, array $variables = array())
@@ -72,6 +82,7 @@ class Response
      * Establece la vista a usar
      *
      * @param string $view Nombre de la visa a usar
+     *
      * @return Response Instancia de la clase Response
      */
     public function setView($view): Response
@@ -84,6 +95,7 @@ class Response
      * Establece las variables que se usarán en la vista
      *
      * @param array $variables Arreglo asociativo con los datos para la vista
+     *
      * @return Response Instancia de la clase Response
      */
     public function setVariables(array $variables): Response
@@ -97,6 +109,7 @@ class Response
      *
      * @param string $param Nombre del parámetro
      * @param string $value Valor del parámetro
+     *
      * @return Response Instancia de la clase Response
      */
     public function setHeader(string $param, string $value): Response
@@ -109,6 +122,7 @@ class Response
      * Establece el código de respuesta HTTP para el navegador.
      *
      * @param int $code Número del código
+     *
      * @return Response Instancia de la clase Response
      */
     public function setResponseCode(int $code): Response
@@ -131,7 +145,7 @@ class Response
      * Renderiza la vista
      *
      * @param string|null $bundle [opcional] Nombre del paquete donde está la vista
-     * 
+     *
      * @return void
      */
     public function render(?string $bundle = null): void
@@ -139,13 +153,15 @@ class Response
         if (count($this->variables) > 0) {
             extract($this->variables);
         }
-        
+
         if (\strtolower($this->view) === 'json' and isset($json_data) === true) {
             header("Content-type: application/json; charset=utf-8");
             echo json_encode($json_data);
-        } else if (\strtolower($this->view) === 'json' and isset($json_data) === false) {
+        } elseif (\strtolower($this->view) === 'json' and isset($json_data) === false) {
             // DISPARA ERROR DE QUE NO EXISTE $json_data
-        } else if (is_file($this->path . self::DIR . $bundle . $this->view . '.template.php') === true and $bundle !== null) {
+        } elseif (is_file($this->path . self::DIR . $bundle . $this->view . '.template.php') === true and
+            $bundle !== null
+        ) {
             require $this->path . self::DIR . $bundle . $this->view . '.template.php';
         } else {
             require $this->path . self::DIR . $this->view . '.template.php';

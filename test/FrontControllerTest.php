@@ -2,9 +2,9 @@
 
 /**
  * Archivo para testear el FrontController de Zoe EE
- * 
+ *
  * PHP version 7
- * 
+ *
  * @category Test
  * @package  Test
  * @author   Julian Lasso <jalasso69@misena.edu.co>
