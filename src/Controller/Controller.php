@@ -116,4 +116,41 @@ abstract class Controller
     {
         return $this->view;
     }
+
+    /**
+     * Establece cabecera HTTP
+     *
+     * @param string $param Nombre del parámetro
+     * @param string $value Valor del parámetro
+     *
+     * @return Response Instancia de la clase Controller
+     */
+    public function setHeader(string $param, string $value): Controller
+    {
+        header("{$param}: {$value}");
+        return $this;
+    }
+
+    /**
+     * Establece el código de respuesta HTTP para el navegador.
+     *
+     * @param int $code Número del código
+     *
+     * @return Response Instancia de la clase Controller
+     */
+    public function setResponseCode(int $code): Controller
+    {
+        http_response_code($code);
+        return $this;
+    }
+
+    /**
+     * Obtiene el codigo HTTP de respuesta.
+     *
+     * @return mixed Código HTTP de respuesta
+     */
+    public function getResponseCode()
+    {
+        return http_response_code();
+    }
 }
