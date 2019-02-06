@@ -105,43 +105,6 @@ class Response
     }
 
     /**
-     * Establece cabecera HTTP
-     *
-     * @param string $param Nombre del parámetro
-     * @param string $value Valor del parámetro
-     *
-     * @return Response Instancia de la clase Response
-     */
-    public function setHeader(string $param, string $value): Response
-    {
-        header("{$param}: {$value}");
-        return $this;
-    }
-
-    /**
-     * Establece el código de respuesta HTTP para el navegador.
-     *
-     * @param int $code Número del código
-     *
-     * @return Response Instancia de la clase Response
-     */
-    public function setResponseCode(int $code): Response
-    {
-        http_response_code($code);
-        return $this;
-    }
-
-    /**
-     * Obtiene el codigo HTTP de respuesta.
-     *
-     * @return mixed Código HTTP de respuesta
-     */
-    public function getResponseCode()
-    {
-        return http_response_code();
-    }
-
-    /**
      * Renderiza la vista
      *
      * @param string|null $bundle [opcional] Nombre del paquete donde está la vista
