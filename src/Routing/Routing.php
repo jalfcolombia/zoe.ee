@@ -203,6 +203,7 @@ class Routing
     private function solvePath(): bool
     {
         $routings = $this->getRoutingFile();
+        // print_r($routings); exit();
         foreach ($routings as $routing => $detail) {
             $method = true;
             if (isset($detail['method']) === true and
@@ -262,27 +263,31 @@ class Routing
                                             break;
                                         case 'float':
                                             if (preg_match('/^[-]?([0-9]+).([0-9]+)$/', $arrayPath[$key])) {
-                                                $this->params[$explode[1]] = (float)$arrayPath[$key];
+                                                $this->params[$explode[1]] = (float) $arrayPath[$key];
                                                 $cntTmp++;
                                             }
                                             break;
                                         case 'int':
                                             if (preg_match('/^[-]?([0-9]+)$/', $arrayPath[$key])) {
-                                                $this->params[$explode[1]] = (int)$arrayPath[$key];
+                                                $this->params[$explode[1]] = (int) $arrayPath[$key];
                                                 $cntTmp++;
                                             }
                                             break;
                                         case 'integer':
                                             if (preg_match('/^[-]?([0-9]+)$/', $arrayPath[$key])) {
-                                                $this->params[$explode[1]] = (integer)$arrayPath[$key];
+                                                $this->params[$explode[1]] = (integer) $arrayPath[$key];
                                                 $cntTmp++;
                                             }
                                             break;
                                         case 'string':
                                             if (preg_match('/^([a-zA-z])+$/', $arrayPath[$key])) {
-                                                $this->params[$explode[1]] = (string)$arrayPath[$key];
+                                                $this->params[$explode[1]] = (string) $arrayPath[$key];
                                                 $cntTmp++;
                                             }
+                                            break;
+                                        case 'any':
+                                            $this->params[$explode[1]] = (string) $arrayPath[$key];
+                                            $cntTmp++;
                                             break;
                                         default:
                                             throw new ZOEException(sprintf(ZOEException::F0002, $explode[0]), 'F0002');
@@ -303,11 +308,12 @@ class Routing
 
         if (isset($routings['otherwise']) === true) {
             $this->route = $routings['otherwise'];
-        } elseif (isset($routings['404']) === true) {
-            $this->route = $routings['404'];
+        } elseif (isset($routings['E404']) === true) {
+            $this->route = $routings['E404'];
         } else {
             $this->route = $routings['index'];
         }
+
         return false;
     }
 
@@ -363,6 +369,14 @@ class Routing
         }
     }
 
+    public function hasView(): bool
+    {
+        if(isset($this->route['view']) === true) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Devuelve los parámetros asignados en la ruta
      *
@@ -401,7 +415,10 @@ class Routing
      */
     public function getMiddlewareBefore(): array
     {
-        return $this->route['middleware']['before'];
+        if (isset($this->route['middleware']['before']) === true) {
+            return $this->route['middleware']['before'];
+        }
+        return array();
     }
 
     /**
@@ -412,7 +429,10 @@ class Routing
      */
     public function getMiddlewareAfter(): array
     {
-        return $this->route['middleware']['after'];
+        if (isset($this->route['middleware']['after']) === true) {
+            return $this->route['middleware']['after'];
+        }
+        return array();
     }
 
     /**

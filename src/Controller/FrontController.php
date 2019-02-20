@@ -126,6 +126,13 @@ class FrontController
     private $response;
 
     /**
+     * Controlador en ejecución
+     *
+     * @var object
+     */
+    private $controller;
+
+    /**
      * Constructor del controlador frontal
      *
      * @param string $path  Ruta del proyecto en el servidor
@@ -133,14 +140,15 @@ class FrontController
      */
     public function __construct(string $path, string $scope)
     {
+        $this->requestOptions();
         try {
-            $this->path = $path . DIRECTORY_SEPARATOR;
+            $this->path = $path;
             $this->scope = $scope;
             $this->request = new Request();
             $this->response = new Response($this->path);
             $this->cache = new Cache($this->path);
             $this->routing = new Routing(
-                $this->request->getServer('_PATH_INFO'),
+                $this->request->getServer('PATH_INFO'),
                 $this->cache,
                 $this->path,
                 $this->request->getServer('REQUEST_METHOD'),
@@ -177,6 +185,22 @@ class FrontController
         }
     }
 
+    private function requestOptions(): void
+    {
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Credentials: true');
+        header('Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS');
+        header('Access-Control-Allow-Headers: DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range,Options,Accept,Authorization,Origin');
+        header('Access-Control-Max-Age: 1728000');
+
+        if (strtoupper($_SERVER['REQUEST_METHOD']) === 'OPTIONS') {
+            header('Content-Type: text/plain; charset=utf-8');
+            header('Content-Length: 0');
+            http_response_code(204);
+            exit();
+        }
+    }
+
     /**
      * Método para correr el sistema con el proyecto configurado
      *
@@ -187,7 +211,7 @@ class FrontController
         try {
             $this->middleware('getMiddlewareBefore');
             $this->controller();
-            $this->middleware('getMiddlewareAfter');
+            // $this->middleware('getMiddlewareAfter');
             $this->response();
         } catch (\ErrorException | \Exception $exc) {
             echo 'File: ' . $exc->getFile() . '<br>';
@@ -209,11 +233,9 @@ class FrontController
      */
     private function middleware($function): void
     {
-        $middleware = $this->routing->$function();
+        $middleware = $this->routing->{$function}();
         if (is_string($middleware) === true) {
-            include $this->path . $middleware . 'Middleware.php';
-            $middleware = "\\" . $middleware . 'Middleware';
-            eval("\$middleware = new {$middleware}();");
+            eval("\$middleware = new \\{$middleware}(\$this->cache);");
             $middleware->main(
                 $this->request,
                 $this->i18n,
@@ -223,9 +245,7 @@ class FrontController
             );
         } elseif (is_array($middleware) === true) {
             foreach ($middleware as $mddlwr) {
-                include $this->path . $mddlwr . 'Middleware.php';
-                $mddlwr = "\\" . $mddlwr . 'Middleware';
-                eval("\$mddlwr = new {$mddlwr}();");
+                eval("\$mddlwr = new \\{$mddlwr}(\$this->cache);");
                 $mddlwr->main(
                     $this->request,
                     $this->i18n,
@@ -237,7 +257,7 @@ class FrontController
         } else {
             // DISPARAR ERROR
         }
-        exit();
+        // exit();
     }
 
     /**
@@ -247,9 +267,9 @@ class FrontController
      */
     private function controller(): void
     {
-        $controller = $this->routing->getController();
+        $this->controller = $this->routing->getController();
         if ($this->routing->getAction() === null) {
-            $controller->main(
+            $this->controller->main(
                 $this->request,
                 $this->i18n,
                 $this->config,
@@ -257,7 +277,7 @@ class FrontController
                 $this->routing
             );
         } else {
-            $controller->$this->routing->getAction()(
+            $this->controller->{$this->routing->getAction()}(
                 $this->request,
                 $this->i18n,
                 $this->config,
@@ -275,8 +295,8 @@ class FrontController
     private function response(): void
     {
         $this->response
-            ->setVariables((array)$controller)
-            ->setView($this->routing->getView())
+            ->setVariables((array) $this->controller)
+            ->setView((($this->routing->hasView()) ? $this->routing->getView() : $this->controller->getView()))
             ->render($this->getPathView());
     }
 

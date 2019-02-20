@@ -72,6 +72,7 @@ class Session
      */
     public function set(string $param, $value): Session
     {
+        $_SESSION[$param] = $value;
         return $this;
     }
 
@@ -84,7 +85,7 @@ class Session
      */
     public function has(string $param): bool
     {
-        return $_SESSION[$param];
+        return isset($_SESSION[$param]);
     }
 
     /**
@@ -166,6 +167,29 @@ class Session
     public function destroy(): Session
     {
         session_destroy();
+        return $this;
+    }
+
+    /**
+     * Obtiene el ID del usuario ya identificado en la sesión actual
+     *
+     * @return int|null Número de identificación del usuario, en caso de no haber un ID devuelve NULL
+     */
+    public static function GetCurrentUser(): ?int
+    {
+        return (isset($_SESSION['id_current_user'])) ? $_SESSION['id_current_user'] : null;
+    }
+
+    /**
+     * Establece el id del usuario actual ya identificado
+     *
+     * @param int $id ID del usuario identificado en la sesión
+     *
+     * @return Session
+     */
+    public function setCurrentUser(int $id): Session
+    {
+        $this->set('id_current_user', $id);
         return $this;
     }
 }

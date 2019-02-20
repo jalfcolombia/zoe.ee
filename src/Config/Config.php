@@ -26,6 +26,7 @@
 
 namespace ZoeEE\Config;
 
+use ZoeEE\Cache\Cache;
 use ZoeEE\Helper\Helper;
 use ZoeEE\ExceptionHandler\ZOEException;
 
@@ -134,10 +135,11 @@ class Config
      * @param string $project      [opcional] Nombre del proyecto a procesar
      */
     public function __construct(
+        Cache $cache,
         string $scope,
         string $path_project,
         string $bundle,
-        ? string $project = null
+        ?string $project = null
     ) {
         $this->scope = $scope;
         $this->bundle = $bundle . DIRECTORY_SEPARATOR;
