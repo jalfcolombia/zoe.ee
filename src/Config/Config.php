@@ -166,6 +166,11 @@ class Config
         return $answer;
     }
 
+    public function getAll()
+    {
+        return $this->getConfig();
+    }
+
     /**
      * Devuelve un arreglo con la configuración del sistema
      *

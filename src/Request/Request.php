@@ -147,11 +147,11 @@ class Request
      *
      * @param string $param Nombre del parámetro
      *
-     * @return string Valor del parámetro
+     * @return mixed Valor del parámetro
      */
-    public function getQuery(string $param): string
+    public function getQuery(string $param)
     {
-        return $this->get[$param];
+        return ($this->hasQuery($param)) ? $this->get[$param] : null;
     }
 
     /**
@@ -188,7 +188,7 @@ class Request
      */
     public function getParam(string $param)
     {
-        return $this->post[$param];
+        return ($this->hasParam($param)) ? $this->post[$param] : null;
     }
 
     /**
@@ -221,11 +221,11 @@ class Request
      *
      * @param string $param Nombre del parámetro
      *
-     * @return string Valor del parámetro
+     * @return string|null Valor del parámetro
      */
-    public function getPut(string $param): string
+    public function getPut(string $param): ?string
     {
-        return $this->put[$param];
+        return ($this->hasPut($param)) ? $this->put[$param] : null;
     }
 
     /**
@@ -260,9 +260,9 @@ class Request
      *
      * @return string Valor del parámetro
      */
-    public function getDelete(string $param): string
+    public function getDelete(string $param): ?string
     {
-        return $this->delete[$param];
+        return ($this->hasDelete($param)) ? $this->delete[$param] : null;
     }
 
     /**
@@ -299,9 +299,9 @@ class Request
      *
      * @return string Valor del parámetro
      */
-    public function getHeader(string $param): string
+    public function getHeader(string $param): ?string
     {
-        return $this->header[$param];
+        return ($this->hasHeader($param)) ? $this->header[$param] : null;
     }
 
     /**
@@ -336,9 +336,9 @@ class Request
      *
      * @return string Valor de la cookie
      */
-    public function getCookie(string $param): string
+    public function getCookie(string $param): ?string
     {
-        return $this->cookie[$param];
+        return ($this->hasCookie($param)) ? $this->cookie[$param] : null;
     }
 
     /**
@@ -415,6 +415,6 @@ class Request
      */
     public function getServer(string $server): ?string
     {
-        return ($this->hasServer($server) === true) ? $this->server[$server] : null;
+        return ($this->hasServer($server)) ? $this->server[$server] : null;
     }
 }

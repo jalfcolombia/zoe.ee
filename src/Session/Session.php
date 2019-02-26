@@ -38,6 +38,12 @@ namespace ZoeEE\Session;
 class Session
 {
 
+    private const ID_CURRENT_USER = 'id_current_user';
+    private $redis;
+    private $name;
+    private $id;
+    private $time;
+
     /**
      * Constructor de la clase Session
      *
@@ -46,7 +52,36 @@ class Session
      */
     public function __construct(string $name, int $time = 3600)
     {
-        $this->setName($name)->start($time);
+        $this->start($time);
+        $this->setName($name);
+    }
+
+    public function getTime(int $time): int
+    {
+        return $this->time;
+    }
+
+    public function setTime(int $time): Session
+    {
+        $this->time = time() + $time;
+        return $this;
+    }
+
+    /**
+     * Da comienzo a la sesión estableciendo el tiempo de expiración en segundos
+     *
+     * @param int $time Tiempo en segundos
+     *
+     * @return Session Instancia del objecto Session
+     */
+    public function start(int $time): Session
+    {
+        $this->setTime($time);
+        $this->redis = new \Redis();
+        if ($this->redis->connect('localhost', 6379, 10) === false) {
+            throw new \Exception('Parece ser que el servidor Redis no está en línea');
+        }
+        return $this;
     }
 
     /**
@@ -58,7 +93,49 @@ class Session
      */
     public function setName(string $name): Session
     {
-        session_name($name);
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * Devuelve el nombre de la cookie que maneja la sesión en el cliente
+     *
+     * @return string Nombre de la cookie
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function hasId(): bool
+    {
+        return ($this->redis->exists(hash('crc32', $this->name)) === 1) ? true : false;
+    }
+
+    /**
+     * Devuelve el ID de la sesión establecida
+     *
+     * @return string ID de la sesión establecida
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Establece el ID a la sesión presente
+     *
+     * @param string $id ID para la sesión presente
+     *
+     * @return Session Instancia de la clase Session
+     */
+    public function setId(string $id): Session
+    {
+        $this->id = hash('crc32', $id);
+        if ($this->hasId() === false) {
+            $this->redis->hMSet($this->id, array('init' => true));
+            $this->redis->expireAt($this->id, $this->time);
+        }
         return $this;
     }
 
@@ -72,7 +149,7 @@ class Session
      */
     public function set(string $param, $value): Session
     {
-        $_SESSION[$param] = $value;
+        $this->redis->hMSet($this->id, array($param => $value));
         return $this;
     }
 
@@ -85,7 +162,7 @@ class Session
      */
     public function has(string $param): bool
     {
-        return isset($_SESSION[$param]);
+        return $this->redis->hExists($this->id, $param);
     }
 
     /**
@@ -97,7 +174,7 @@ class Session
      */
     public function get(string $param)
     {
-        return $_SESSION[$param];
+        return $this->redis->hGet($this->id, $param);
     }
 
     /**
@@ -109,53 +186,7 @@ class Session
      */
     public function delete(string $param): Session
     {
-        unset($_SESSION[$param]);
-        return $this;
-    }
-
-    /**
-     * Devuelve el nombre de la cookie que maneja la sesión en el cliente
-     *
-     * @return string Nombre de la cookie
-     */
-    public function getName(): string
-    {
-        return session_name();
-    }
-
-    /**
-     * Devuelve el ID de la sesión establecida
-     *
-     * @return string ID de la sesión establecida
-     */
-    public function getId(): string
-    {
-        return session_id();
-    }
-
-    /**
-     * Establece el ID a la sesión presente
-     *
-     * @param string $id ID para la sesión presente
-     *
-     * @return Session Instancia de la clase Session
-     */
-    public function setId(string $id): Session
-    {
-        session_id($id);
-        return $this;
-    }
-
-    /**
-     * Da comienzo a la sesión estableciendo el tiempo de expiración en segundos
-     *
-     * @param int $time Tiempo en segundos
-     *
-     * @return Session Instancia del objecto Session
-     */
-    public function start(int $time): Session
-    {
-        session_start(array('cookie_lifetime' => $time));
+        $this->redis->hDel($this->id, $param);
         return $this;
     }
 
@@ -166,18 +197,21 @@ class Session
      */
     public function destroy(): Session
     {
-        session_destroy();
+        $this->redis->unlink($this->id);
         return $this;
     }
 
     /**
      * Obtiene el ID del usuario ya identificado en la sesión actual
      *
+     * @param string $session_id Description
+     *
      * @return int|null Número de identificación del usuario, en caso de no haber un ID devuelve NULL
      */
     public static function GetCurrentUser(): ?int
     {
-        return (isset($_SESSION['id_current_user'])) ? $_SESSION['id_current_user'] : null;
+        $session = new Session($GLOBALS['token']);
+        return ($session->has(self::ID_CURRENT_USER)) ? $session->get(self::ID_CURRENT_USER) : null;
     }
 
     /**
@@ -189,7 +223,13 @@ class Session
      */
     public function setCurrentUser(int $id): Session
     {
-        $this->set('id_current_user', $id);
+        $this->set(self::ID_CURRENT_USER, $id);
         return $this;
     }
+
+    public function generateSeedForToken(): string
+    {
+        return rand() . "-" . str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$+.|@=*/^`'#~()?") . "-" . date('d-m-Y H:i:s') . "-" . time();
+    }
+
 }

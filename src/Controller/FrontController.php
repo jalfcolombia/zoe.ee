@@ -175,13 +175,17 @@ class FrontController
                 $this->config->get('session.time')
             );
         } catch (\ErrorException | \Exception $exc) {
-            echo 'File: ' . $exc->getFile() . '<br>';
-            echo 'Line: ' . $exc->getLine() . '<br>';
-            echo 'Error: ' . $exc->getCode() . '<br>';
-            echo 'Message: ' . $exc->getMessage() . '<br>';
-            echo '<pre>';
-            print_r($exc->getTrace());
-            echo '</pre>';
+            header("Content-type: application/json; charset=utf-8");
+            http_response_code(500);
+            $json_data = array(
+                'file' => $exc->getFile(),
+                'line' => $exc->getLine(),
+                'error' => $exc->getCode(),
+                'message' => $exc->getMessage(),
+                'trace' => $exc->getTrace()
+            );
+            echo json_encode($json_data);
+            exit();
         }
     }
 
@@ -315,4 +319,42 @@ class FrontController
         }
         return $answer . DIRECTORY_SEPARATOR;
     }
+
+    static public function getRealIP($void = null)
+    {
+        $headers = array(
+            'HTTP_VIA',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_X_FORWARDED',
+            'HTTP_FORWARDED',
+            'HTTP_CLIENT_IP',
+            'HTTP_HTTP_CLIENT_IP',
+            'HTTP_FORWARDED_FOR_IP',
+            'VIA',
+            'X_FORWARDED_FOR',
+            'FORWARDED_FOR',
+            'X_FORWARDED',
+            'FORWARDED',
+            'CLIENT_IP',
+            'FORWARDED_FOR_IP',
+            'HTTP_XPROXY_CONNECTION',
+            'HTTP_PROXY_CONNECTION',
+            'HTTP_X_REAL_IP',
+            'HTTP_X_PROXY_ID',
+            'HTTP_USERAGENT_VIA',
+            'HTTP_HTTP_PC_REMOTE_ADDR',
+            'HTTP_X_CLUSTER_CLIENT_IP'
+        );
+
+        foreach ($headers as $header)
+            if (isset($_SERVER[$header]) && !empty($_SERVER[$header]))
+                return $_SERVER[$header];
+
+        if (trim($_SERVER['SERVER_ADDR']) == trim($_SERVER['REMOTE_ADDR']))
+            return $_SERVER['SERVER_ADDR'];
+
+        return $_SERVER['REMOTE_ADDR'];
+    }
+
 }

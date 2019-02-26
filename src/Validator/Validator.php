@@ -189,7 +189,7 @@ class Validator
                         break;
                     // IS_NOT_NULL
                     case 6:
-                        if (is_null($validations['value']) === true or $validations['value'] === '') {
+                        if (is_null($validations['value']) === true or $validations['value'] === '' or $validations['value'] === 'null') {
                             $flag = false;
                             $flagCnt++;
                         }
