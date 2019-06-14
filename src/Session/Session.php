@@ -78,7 +78,7 @@ class Session
     {
         $this->setTime($time);
         $this->redis = new \Redis();
-        if ($this->redis->connect('localhost', 6379, 10) === false) {
+        if ($this->redis->pconnect('localhost', 6379) === false) {
             throw new \Exception('Parece ser que el servidor Redis no está en línea');
         }
         return $this;
@@ -149,6 +149,7 @@ class Session
      */
     public function set(string $param, $value): Session
     {
+        $GLOBALS["{$this->id}.$param"] = $value;
         $this->redis->hMSet($this->id, array($param => $value));
         return $this;
     }
@@ -162,7 +163,7 @@ class Session
      */
     public function has(string $param): bool
     {
-        return $this->redis->hExists($this->id, $param);
+        return (isset($GLOBALS["{$this->id}.$param"]) === true) ? true : $this->redis->hExists($this->id, $param);
     }
 
     /**
@@ -174,7 +175,10 @@ class Session
      */
     public function get(string $param)
     {
-        return $this->redis->hGet($this->id, $param);
+        if (isset($GLOBALS["{$this->id}.$param"]) === false) {
+            $GLOBALS["{$this->id}.$param"] = $this->redis->hGet($this->id, $param);
+        }
+        return $GLOBALS["{$this->id}.$param"];
     }
 
     /**
@@ -186,6 +190,7 @@ class Session
      */
     public function delete(string $param): Session
     {
+        unset($GLOBALS["{$this->id}.$param"]);
         $this->redis->hDel($this->id, $param);
         return $this;
     }
@@ -210,8 +215,13 @@ class Session
      */
     public static function GetCurrentUser(): ?int
     {
-        $session = new Session($GLOBALS['token']);
-        return ($session->has(self::ID_CURRENT_USER)) ? $session->get(self::ID_CURRENT_USER) : null;
+        if (isset($GLOBALS[self::ID_CURRENT_USER]) === true) {
+            return $GLOBALS[self::ID_CURRENT_USER];
+        } else {
+            $session = new Session($GLOBALS['token']);
+            $session->setId($GLOBALS['token']);
+            return ($session->has(self::ID_CURRENT_USER)) ? $session->get(self::ID_CURRENT_USER) : null;
+        }
     }
 
     /**
@@ -223,6 +233,7 @@ class Session
      */
     public function setCurrentUser(int $id): Session
     {
+        $GLOBALS[self::ID_CURRENT_USER] = $id;
         $this->set(self::ID_CURRENT_USER, $id);
         return $this;
     }

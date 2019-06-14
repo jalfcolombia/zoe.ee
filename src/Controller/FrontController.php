@@ -218,13 +218,28 @@ class FrontController
             // $this->middleware('getMiddlewareAfter');
             $this->response();
         } catch (\ErrorException | \Exception $exc) {
-            echo 'File: ' . $exc->getFile() . '<br>';
-            echo 'Line: ' . $exc->getLine() . '<br>';
-            echo 'Error: ' . $exc->getCode() . '<br>';
-            echo 'Message: ' . $exc->getMessage() . '<br>';
-            echo '<pre>';
-            print_r($exc->getTrace());
-            echo '</pre>';
+            http_response_code(500);
+            if ($this->request->isAjax() === true) {
+                header('Content-type: application/json; charset=utf-8');
+                echo json_encode(
+                    array(
+                        'File' => $exc->getFile(),
+                        'Line' => $exc->getLine(),
+                        'Error' => $exc->getCode(),
+                        'Message' => $exc->getMessage(),
+                        'Trace' => $exc->getTrace()
+                    )
+                );
+                exit();
+            } else {
+                echo 'File: ' . $exc->getFile() . '<br>';
+                echo 'Line: ' . $exc->getLine() . '<br>';
+                echo 'Error: ' . $exc->getCode() . '<br>';
+                echo 'Message: ' . $exc->getMessage() . '<br>';
+                echo '<pre>';
+                print_r($exc->getTrace());
+                echo '</pre>';
+            }
         }
     }
 

@@ -26,7 +26,7 @@
 
 namespace ZoeEE\Validator;
 
- /**
+/**
  * Clase para realizar validación de datos
  *
  * @category Validator
@@ -263,4 +263,59 @@ class Validation extends Validator
         );
         return $this;
     }
+
+    /**
+     * Validación para determinar si un valor cumple con un mínimo de carácteres
+     *
+     * @param int    $lenght        Longitud mínima
+     * @param string $error_message Mensaje de error
+     *
+     * @return Validation Instancia de la clase Validation
+     */
+    public function minLength(int $lenght, string $error_message): Validation
+    {
+        $this->form[$this->name][] = array(
+            'type' => self::MIN_LENGTH,
+            'message' => $error_message,
+            'minlength' => $lenght
+        );
+        return $this;
+    }
+
+    /**
+     * Validación para determinar si un valor no se pasas de un máximo de carácteres
+     *
+     * @param int    $lenght        Longitud máxima
+     * @param string $error_message Mensaje de error
+     *
+     * @return Validation Instancia de la clase Validation
+     */
+    public function maxLength(int $length, string $error_message): Validation
+    {
+        $this->form[$this->name][] = array(
+            'type' => self::MAX_LENGTH,
+            'message' => $error_message,
+            'maxlength' => $length
+        );
+        return $this;
+    }
+
+    /**
+     * Validación del tipo ¿Este dato existe en este universo?
+     *
+     * @param array  $universe      Arreglo considerado el universo
+     * @param string $error_message Mensaje de error
+     *
+     * @return Validation Instancia de la clase Validation
+     */
+    public function existsInTheUniverse(array $universe, string $error_message): Validation
+    {
+        $this->form[$this->name][] = array(
+            'type' => self::EXISTS_IN_THE_UNIVERSE,
+            'message' => $error_message,
+            'universe' => $universe
+        );
+        return $this;
+    }
+
 }

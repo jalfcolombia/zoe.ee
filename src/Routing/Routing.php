@@ -33,7 +33,7 @@ use ZoeEE\Controller\Controller;
 use ZoeEE\Controller\FrontController;
 use ZoeEE\ExceptionHandler\ZOEException;
 
- /**
+/**
  * Clase para controlar el sistema de rutas basado en un arhchivo YAML
  *
  * @category Routing
@@ -42,8 +42,7 @@ use ZoeEE\ExceptionHandler\ZOEException;
  * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
  * @link     https://github.com/jalfcolombia/zoe.ee
  */
-class Routing
-{
+class Routing {
 
     /**
      * Nombre de la variable en caché de la memoria RAM
@@ -53,7 +52,7 @@ class Routing
     /**
      * Dirección y nombre de archivo en la caché
      */
-    private const CACHE = 'Confing' . DIRECTORY_SEPARATOR . 'Routing';
+    private const CACHE = 'Config' . DIRECTORY_SEPARATOR . 'Routing';
 
     /**
      * Dirección y nombre del archivo YAML
@@ -157,12 +156,12 @@ class Routing
      * @param string      $scope        Campo de aplicación del sistema (dev, prod o test)
      */
     public function __construct(
-        ?string $path,
-        Cache $cache,
-        string $path_project,
-        string $method,
-        bool $is_ajax,
-        string $scope = FrontController::DEV
+            ?string $path,
+            Cache $cache,
+            string $path_project,
+            string $method,
+            bool $is_ajax,
+            string $scope = FrontController::DEV
     ) {
         $this->params = array();
         $this->route = array();
@@ -184,8 +183,7 @@ class Routing
      *
      * @return string Cadena resultante
      */
-    private function strReplaceLast(string $search, string $replace, string $string): string
-    {
+    private function strReplaceLast(string $search, string $replace, string $string): string {
         $pos = strrpos($string, $search);
         if ($pos !== false) {
             $string = substr_replace($string, $replace, $pos, strlen($search));
@@ -200,14 +198,14 @@ class Routing
      *
      * @return bool Verdadero si encuentra una ruta en caso contrario devolverá Falso
      */
-    private function solvePath(): bool
-    {
+    private function solvePath(): bool {
         $routings = $this->getRoutingFile();
+        // echo '<pre>';
         // print_r($routings); exit();
         foreach ($routings as $routing => $detail) {
             $method = true;
             if (isset($detail['method']) === true and
-                is_array($detail['method']) === true and count($detail['method']) > 0
+                    is_array($detail['method']) === true and count($detail['method']) > 0
             ) {
                 $detail['method'] = array_map('strtoupper', $detail['method']);
                 $method = (array_search($this->method, $detail['method']) === false) ? false : true;
@@ -322,15 +320,20 @@ class Routing
      *
      * @return Controller Instancia del controlador
      */
-    public function getController(): Controller
-    {
+    public function getController(): Controller {
         $controller = null;
+        $class_name = null;
         if ($this->getProject() !== null) {
-            eval("\$controller = new \\Bundle\\{$this->route['project']}\\Bundle\\{$this->route['bundle']}\\" .
-            "Controller\\{$this->route['controller']}Controller(\$this->cache);");
+            $class_name = "\\Bundle\\{$this->route['project']}\\Bundle\\{$this->route['bundle']}\\" .
+                    "Controller\\{$this->route['controller']}Controller";
         } else {
-            eval("\$controller = new \\Bundle\\{$this->route['bundle']}\\Controller\\" .
-            "{$this->route['controller']}Controller(\$this->cache);");
+            $class_name = "\\Bundle\\{$this->route['bundle']}\\Controller\\" .
+                    "{$this->route['controller']}Controller";
+        }
+        if (class_exists($class_name) === true) {
+            eval("\$controller = new {$class_name}(\$this->cache);");
+        } else {
+            throw new \Exception("El controlador {$class_name} no existe. Verifique el namespace");
         }
         return $controller;
     }
@@ -340,18 +343,15 @@ class Routing
      *
      * @return string Nombre del paquete
      */
-    public function getBundle(): string
-    {
+    public function getBundle(): string {
         return $this->route['bundle'];
     }
 
-    public function getProject(): ?string
-    {
+    public function getProject(): ?string {
         return (isset($this->route['project']) === true ? $this->route['project'] : null);
     }
 
-    public function getAction(): ?string
-    {
+    public function getAction(): ?string {
         return (isset($this->route['action']) === true ? $this->route['action'] : null);
     }
 
@@ -360,8 +360,7 @@ class Routing
      *
      * @return string Nombre de la vista
      */
-    public function getView(): string
-    {
+    public function getView(): string {
         if (is_array($this->route['view']) === true) {
             return $this->route['view']['template'];
         } else {
@@ -369,9 +368,8 @@ class Routing
         }
     }
 
-    public function hasView(): bool
-    {
-        if(isset($this->route['view']) === true) {
+    public function hasView(): bool {
+        if (isset($this->route['view']) === true) {
             return true;
         }
         return false;
@@ -382,8 +380,7 @@ class Routing
      *
      * @return array Arreglo con los parámetros por el método GET en la ruta
      */
-    public function getParams(): array
-    {
+    public function getParams(): array {
         return $this->params;
     }
 
@@ -392,8 +389,7 @@ class Routing
      *
      * @return bool Falso si no encuentra una ruta válida o Verdadero en caso contrario
      */
-    public function isValid(): bool
-    {
+    public function isValid(): bool {
         return $this->is_valid;
     }
 
@@ -402,8 +398,7 @@ class Routing
      *
      * @return array Arreglo de la ruta consultada
      */
-    public function getRoute(): array
-    {
+    public function getRoute(): array {
         return $this->route;
     }
 
@@ -413,8 +408,7 @@ class Routing
      *
      * @return array Arreglo de controladores
      */
-    public function getMiddlewareBefore(): array
-    {
+    public function getMiddlewareBefore(): array {
         if (isset($this->route['middleware']['before']) === true) {
             return $this->route['middleware']['before'];
         }
@@ -427,8 +421,7 @@ class Routing
      *
      * @return array Arreglo de controladores
      */
-    public function getMiddlewareAfter(): array
-    {
+    public function getMiddlewareAfter(): array {
         if (isset($this->route['middleware']['after']) === true) {
             return $this->route['middleware']['after'];
         }
@@ -442,29 +435,28 @@ class Routing
      *
      * @return array Arreglo de las rutas del sistema
      */
-    protected function getRoutingFile(): array
-    {
+    protected function getRoutingFile(): array {
         try {
             if ($this->scope === self::DEV) {
                 return $this->searchAllFilesYaml(
-                    $this->path_project . self::BUNDLE .
-                    (($this->getProject() !== null) ? $this->route['project'] . DIRECTORY_SEPARATOR : ''),
-                    Yaml::parseFile($this->path_project . self::YAML)
+                                $this->path_project . self::BUNDLE .
+                                (($this->getProject() !== null) ? $this->route['project'] . DIRECTORY_SEPARATOR : ''),
+                                Yaml::parseFile($this->path_project . self::YAML)
                 );
             } else {
                 if (apcu_exists(self::NAME_CACHE) === true) {
                     return apcu_fetch(self::NAME_CACHE);
                 } elseif ($this->cache->has(self::CACHE) === true) {
-                    apcu_add(self::NAME_CACHE, (array)json_decode($this->cache->get(self::CACHE), true));
+                    apcu_add(self::NAME_CACHE, (array) json_decode($this->cache->get(self::CACHE), true));
                     return apcu_fetch(self::NAME_CACHE);
                 } else {
                     apcu_add(
-                        self::NAME_CACHE,
-                        $this->searchAllFilesYaml(
-                            $this->path_project . self::BUNDLE .
-                            (($this->getProject() !== null) ? $this->route['project'] . DIRECTORY_SEPARATOR : ''),
-                            Yaml::parseFile($this->path_project . self::YAML)
-                        )
+                            self::NAME_CACHE,
+                            $this->searchAllFilesYaml(
+                                    $this->path_project . self::BUNDLE .
+                                    (($this->getProject() !== null) ? $this->route['project'] . DIRECTORY_SEPARATOR : ''),
+                                    Yaml::parseFile($this->path_project . self::YAML)
+                            )
                     );
                     $this->cache->set(self::CACHE, json_encode(apcu_fetch(self::NAME_CACHE), true));
                     return apcu_fetch(self::NAME_CACHE);
@@ -484,21 +476,20 @@ class Routing
      *
      * @return array Arreglo con las rutas del sistema incluidas las de los paquétes
      */
-    protected function searchAllFilesYaml(string $path, array $routinInit): array
-    {
+    protected function searchAllFilesYaml(string $path, array $routinInit): array {
         if (is_dir($path) === true) {
             $dir = opendir($path);
             $yaml = $routinInit;
             while ($file = readdir($dir)) {
                 // Busqueda en Bundles
                 if ($file !== '.' and $file !== '..' and
-                    is_file($path . $file . DIRECTORY_SEPARATOR . self::YAML) === true
+                        is_file($path . $file . DIRECTORY_SEPARATOR . self::YAML) === true
                 ) {
                     $yaml = array_merge($yaml, Yaml::parseFile($path . $file . DIRECTORY_SEPARATOR . self::YAML));
                 }
                 // Busqueda en Bundles de Proyectos
                 if ($file !== '.' and $file !== '..' and
-                    is_dir($path . $file . DIRECTORY_SEPARATOR . self::BUNDLE) === true
+                        is_dir($path . $file . DIRECTORY_SEPARATOR . self::BUNDLE) === true
                 ) {
                     $yaml = $this->searchAllFilesYaml($path . $file . DIRECTORY_SEPARATOR . self::BUNDLE, $yaml);
                 }
@@ -506,4 +497,5 @@ class Routing
             return $yaml;
         }
     }
+
 }

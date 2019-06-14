@@ -94,6 +94,21 @@ class Validator
     protected const CUSTOM = 10;
 
     /**
+     * Validación para considerar un mínimo de carácteres
+     */
+    protected const MIN_LENGTH = 11;
+
+    /**
+     * Validación para considerar un máximo de carácteres
+     */
+    protected const MAX_LENGTH = 12;
+
+    /**
+     * Validación para considerar un dato en un universo existente
+     */
+    protected const EXISTS_IN_THE_UNIVERSE = 13;
+
+    /**
      * Variable contenedora de la configuración para realizar las validaciones
      *
      * @var string
@@ -218,9 +233,32 @@ class Validator
                     // CUSTOM
                     case 10:
                         if ($validations[$x]['class']->validate(
-                            $validations['value'],
-                            $validations[$x]['params']
-                        ) === false) {
+                                        $validations['value'],
+                                        $validations[$x]['params']
+                                ) === false) {
+                            $flag = false;
+                            $flagCnt++;
+                        }
+                        break;
+                    // MIN_LENGTH
+                    case 11:
+                        if (
+                                strlen($validations['value']) < $validations[$x]['minlength']
+                        ) {
+                            $flag = false;
+                            $flagCnt++;
+                        }
+                        break;
+                    // MAX_LENGTH
+                    case 12:
+                        if (strlen($validations['value']) > $validations[$x]['maxlength']) {
+                            $flag = false;
+                            $flagCnt++;
+                        }
+                        break;
+                    // EXISTS_IN_THE_UNIVERSE
+                    case 13:
+                        if (in_array($validations['value'], $validations[$x]['universe']) === false) {
                             $flag = false;
                             $flagCnt++;
                         }
@@ -234,4 +272,5 @@ class Validator
         }
         return $flagCnt > 0 ? false : true;
     }
+
 }

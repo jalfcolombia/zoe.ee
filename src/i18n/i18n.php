@@ -139,11 +139,16 @@ class i18n
     public function __(string $text, $args = null): string
     {
         $dictionary = $this->getDictionary();
-        if (is_string($args) === true) {
+        if (is_array($args) === false) {
             return sprintf($dictionary[$text], $args);
         } elseif (is_array($args) === true) {
             return vsprintf($dictionary[$text], $args);
         }
+//        if (is_string($args) === true) {
+//            return sprintf($dictionary[$text], $args);
+//        } elseif (is_array($args) === true) {
+//            return vsprintf($dictionary[$text], $args);
+//        }
         return $dictionary[$text];
     }
 
