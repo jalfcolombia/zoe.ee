@@ -79,7 +79,7 @@ class Session
         $this->setTime($time);
         $this->redis = new \Redis();
         if ($this->redis->pconnect('localhost', 6379) === false) {
-            throw new \Exception('Parece ser que el servidor Redis no está en línea');
+            throw new \RuntimeException('Parece ser que el servidor Redis no está en línea');
         }
         return $this;
     }

@@ -200,8 +200,8 @@ class Routing {
      */
     private function solvePath(): bool {
         $routings = $this->getRoutingFile();
-        // echo '<pre>';
-        // print_r($routings); exit();
+//         echo '<pre>';
+//         print_r($routings); exit();
         foreach ($routings as $routing => $detail) {
             $method = true;
             if (isset($detail['method']) === true and
@@ -333,7 +333,7 @@ class Routing {
         if (class_exists($class_name) === true) {
             eval("\$controller = new {$class_name}(\$this->cache);");
         } else {
-            throw new \Exception("El controlador {$class_name} no existe. Verifique el namespace");
+            throw new \RuntimeException("El controlador {$class_name} no existe. Verifique el namespace");
         }
         return $controller;
     }

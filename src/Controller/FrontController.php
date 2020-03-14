@@ -217,7 +217,7 @@ class FrontController
             $this->controller();
             // $this->middleware('getMiddlewareAfter');
             $this->response();
-        } catch (\ErrorException | \Exception $exc) {
+        } catch (\ErrorException | \Exception | \RuntimeException | \PDOException | \Error $exc) {
             http_response_code(500);
             if ($this->request->isAjax() === true) {
                 header('Content-type: application/json; charset=utf-8');
@@ -230,7 +230,7 @@ class FrontController
                         'Trace' => $exc->getTrace()
                     )
                 );
-                exit();
+                // exit();
             } else {
                 echo 'File: ' . $exc->getFile() . '<br>';
                 echo 'Line: ' . $exc->getLine() . '<br>';

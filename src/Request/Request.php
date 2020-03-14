@@ -99,19 +99,32 @@ class Request
      */
     public function __construct()
     {
-        $this->get = (filter_input_array(INPUT_GET) === false) ? array() : filter_input_array(INPUT_GET);
-        $this->post = (filter_input_array(INPUT_POST) === false) ? array() : filter_input_array(INPUT_POST);
-        if (filter_input(INPUT_SERVER, 'REQUEST_METHOD') === 'PUT') {
-            parse_str(file_get_contents("php://input"), $this->put);
-            $this->delete = array();
-        } elseif (filter_input(INPUT_SERVER, 'REQUEST_METHOD') == 'DELETE') {
-            parse_str(file_get_contents("php://input"), $this->delete);
-            $this->put = array();
-        }
+        $this->get    = (filter_input_array(INPUT_GET) === false) ? array() : filter_input_array(INPUT_GET);
+        $this->post   = (filter_input_array(INPUT_POST) === false) ? array() : filter_input_array(INPUT_POST);
+        $this->delete = array();
+        $this->put    = array();
         $this->header = (getallheaders() === false) ? array() : getallheaders();
         $this->cookie = (filter_input_array(INPUT_COOKIE) === false) ? array() : filter_input_array(INPUT_COOKIE);
-        $this->file = $_FILES;
+        $this->file   = $_FILES;
         $this->server = (filter_input_array(INPUT_SERVER) === false) ? array() : filter_input_array(INPUT_SERVER);
+
+        $type_request = strtolower(filter_input(INPUT_SERVER, 'REQUEST_METHOD'));
+        $request_body = file_get_contents('php://input');
+        if ($this->isJson($request_body) === true) {
+            // echo 1;
+            $this->{$type_request} = array_merge((array) $this->{$type_request}, (array) json_decode($request_body));
+        } elseif (strlen($type_request) > 0) {
+            // echo 2;
+            parse_str($request_body, $tmp_data);
+            if ($type_request === 'delete') {
+                $this->{$type_request} = array_merge((array) $this->{$type_request}, $this->get, (array) $tmp_data);
+            } else {
+                $this->{$type_request} = array_merge((array) $this->{$type_request}, (array) $tmp_data);
+            }
+            
+        }
+
+        // print_r($this->{$type_request}); exit();
     }
 
     /**
@@ -122,7 +135,7 @@ class Request
     public function isAjax(): bool
     {
         if (isset($this->server['HTTP_X_REQUESTED_WITH']) === true and
-            strtolower($this->server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
+                strtolower($this->server['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
         ) {
             return true;
         } else {
@@ -417,4 +430,11 @@ class Request
     {
         return ($this->hasServer($server)) ? $this->server[$server] : null;
     }
+
+    private function isJson($string): bool
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+
 }
