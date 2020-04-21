@@ -278,7 +278,7 @@ class Routing {
                                             }
                                             break;
                                         case 'string':
-                                            if (preg_match('/^([a-zA-z])+$/', $arrayPath[$key])) {
+                                            if (preg_match('/^([a-zA-z_\-])+$/', $arrayPath[$key])) {
                                                 $this->params[$explode[1]] = (string) $arrayPath[$key];
                                                 $cntTmp++;
                                             }
