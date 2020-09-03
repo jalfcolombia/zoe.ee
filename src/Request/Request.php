@@ -391,6 +391,17 @@ class Request
     {
         return ($this->hasFile($file) === true) ? $this->file[$file] : null;
     }
+    
+    /**
+     * Obtiene el arreglo de los archivos que procden de la
+     * petición al sistema
+     *
+     * @return array Arreglo con información de los archivos cargados al servidor
+     */
+    public function getFiles(): array
+    {
+        return $this->file;
+    }
 
     /**
      * Borra un archivo procedente de la petición al sistema
