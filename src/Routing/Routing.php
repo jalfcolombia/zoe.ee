@@ -42,7 +42,8 @@ use ZoeEE\ExceptionHandler\ZOEException;
  * @license  https://github.com/jalfcolombia/zoe.ee/blob/master/LICENSE Apache2
  * @link     https://github.com/jalfcolombia/zoe.ee
  */
-class Routing {
+class Routing
+{
 
     /**
      * Nombre de la variable en caché de la memoria RAM
@@ -162,16 +163,17 @@ class Routing {
             string $method,
             bool $is_ajax,
             string $scope = FrontController::DEV
-    ) {
-        $this->params = array();
-        $this->route = array();
-        $this->path = ($path === null) ? '/' : $path;
-        $this->cache = $cache;
+    )
+    {
+        $this->params       = array();
+        $this->route        = array();
+        $this->path         = ($path === null) ? '/' : $path;
+        $this->cache        = $cache;
         $this->path_project = $path_project;
-        $this->method = $method;
-        $this->is_ajax = $is_ajax;
-        $this->scope = $scope;
-        $this->is_valid = $this->solvePath();
+        $this->method       = $method;
+        $this->is_ajax      = $is_ajax;
+        $this->scope        = $scope;
+        $this->is_valid     = $this->solvePath();
     }
 
     /**
@@ -183,7 +185,8 @@ class Routing {
      *
      * @return string Cadena resultante
      */
-    private function strReplaceLast(string $search, string $replace, string $string): string {
+    private function strReplaceLast(string $search, string $replace, string $string): string
+    {
         $pos = strrpos($string, $search);
         if ($pos !== false) {
             $string = substr_replace($string, $replace, $pos, strlen($search));
@@ -198,7 +201,8 @@ class Routing {
      *
      * @return bool Verdadero si encuentra una ruta en caso contrario devolverá Falso
      */
-    private function solvePath(): bool {
+    private function solvePath(): bool
+    {
         $routings = $this->getRoutingFile();
 //         echo '<pre>';
 //         print_r($routings); exit();
@@ -208,7 +212,7 @@ class Routing {
                     is_array($detail['method']) === true and count($detail['method']) > 0
             ) {
                 $detail['method'] = array_map('strtoupper', $detail['method']);
-                $method = (array_search($this->method, $detail['method']) === false) ? false : true;
+                $method           = (array_search($this->method, $detail['method']) === false) ? false : true;
             } elseif (isset($detail['method']) === true and is_string($detail['method']) === true) {
                 $method = (strtoupper($this->method) === strtoupper($detail['method'])) ? true : false;
             }
@@ -220,23 +224,23 @@ class Routing {
 
             if ($method === true and $ajax === true) {
                 $originalPath = $this->path;
-                $yamlPath = $detail['path'];
+                $yamlPath     = $detail['path'];
                 if (strpos($yamlPath, ':') !== false) {
-                    $arrayPath = $arrayRoute = array();
+                    $arrayPath  = $arrayRoute = array();
                     if (strrpos($yamlPath, '.') !== false) {
-                        $yamlPath = $this->strReplaceLast('.', '|', $yamlPath);
+                        $yamlPath     = $this->strReplaceLast('.', '|', $yamlPath);
                         $originalPath = $this->strReplaceLast('.', '|', $originalPath);
-                        $arrayRoute = explode('|', $yamlPath);
-                        $arrayPath = explode('|', $originalPath);
-                        $yamlPath = substr($yamlPath, 0, strrpos($yamlPath, '|'));
+                        $arrayRoute   = explode('|', $yamlPath);
+                        $arrayPath    = explode('|', $originalPath);
+                        $yamlPath     = substr($yamlPath, 0, strrpos($yamlPath, '|'));
                         $originalPath = substr($this->path, 0, strrpos($originalPath, '|'));
                         unset($arrayPath[0], $arrayRoute[0]);
                     }
                     $arrayRoute = array_merge(explode('/', $yamlPath), $arrayRoute);
-                    $arrayPath = array_merge(explode('/', $originalPath), $arrayPath);
+                    $arrayPath  = array_merge(explode('/', $originalPath), $arrayPath);
                     unset($arrayPath[0], $arrayRoute[0]);
-                    $cnt = count($arrayPath);
-                    $cntTmp = 0;
+                    $cnt        = count($arrayPath);
+                    $cntTmp     = 0;
                     if ($cnt === count($arrayRoute)) {
                         foreach ($arrayRoute as $key => $value) {
                             switch (strpos($value, ':')) {
@@ -320,7 +324,8 @@ class Routing {
      *
      * @return Controller Instancia del controlador
      */
-    public function getController(): Controller {
+    public function getController(): Controller
+    {
         $controller = null;
         $class_name = null;
         if ($this->getProject() !== null) {
@@ -343,15 +348,18 @@ class Routing {
      *
      * @return string Nombre del paquete
      */
-    public function getBundle(): string {
+    public function getBundle(): string
+    {
         return $this->route['bundle'];
     }
 
-    public function getProject(): ?string {
+    public function getProject(): ?string
+    {
         return (isset($this->route['project']) === true ? $this->route['project'] : null);
     }
 
-    public function getAction(): ?string {
+    public function getAction(): ?string
+    {
         return (isset($this->route['action']) === true ? $this->route['action'] : null);
     }
 
@@ -360,7 +368,8 @@ class Routing {
      *
      * @return string Nombre de la vista
      */
-    public function getView(): string {
+    public function getView(): string
+    {
         if (is_array($this->route['view']) === true) {
             return $this->route['view']['template'];
         } else {
@@ -368,7 +377,8 @@ class Routing {
         }
     }
 
-    public function hasView(): bool {
+    public function hasView(): bool
+    {
         if (isset($this->route['view']) === true) {
             return true;
         }
@@ -380,7 +390,8 @@ class Routing {
      *
      * @return array Arreglo con los parámetros por el método GET en la ruta
      */
-    public function getParams(): array {
+    public function getParams(): array
+    {
         return $this->params;
     }
 
@@ -389,7 +400,8 @@ class Routing {
      *
      * @return bool Falso si no encuentra una ruta válida o Verdadero en caso contrario
      */
-    public function isValid(): bool {
+    public function isValid(): bool
+    {
         return $this->is_valid;
     }
 
@@ -398,7 +410,8 @@ class Routing {
      *
      * @return array Arreglo de la ruta consultada
      */
-    public function getRoute(): array {
+    public function getRoute(): array
+    {
         return $this->route;
     }
 
@@ -408,7 +421,8 @@ class Routing {
      *
      * @return array Arreglo de controladores
      */
-    public function getMiddlewareBefore(): array {
+    public function getMiddlewareBefore(): array
+    {
         if (isset($this->route['middleware']['before']) === true) {
             return $this->route['middleware']['before'];
         }
@@ -421,7 +435,8 @@ class Routing {
      *
      * @return array Arreglo de controladores
      */
-    public function getMiddlewareAfter(): array {
+    public function getMiddlewareAfter(): array
+    {
         if (isset($this->route['middleware']['after']) === true) {
             return $this->route['middleware']['after'];
         }
@@ -435,7 +450,8 @@ class Routing {
      *
      * @return array Arreglo de las rutas del sistema
      */
-    protected function getRoutingFile(): array {
+    protected function getRoutingFile(): array
+    {
         try {
             if ($this->scope === self::DEV) {
                 return $this->searchAllFilesYaml(
@@ -476,9 +492,10 @@ class Routing {
      *
      * @return array Arreglo con las rutas del sistema incluidas las de los paquétes
      */
-    protected function searchAllFilesYaml(string $path, array $routinInit): array {
+    protected function searchAllFilesYaml(string $path, array $routinInit): array
+    {
         if (is_dir($path) === true) {
-            $dir = opendir($path);
+            $dir  = opendir($path);
             $yaml = $routinInit;
             while ($file = readdir($dir)) {
                 // Busqueda en Bundles

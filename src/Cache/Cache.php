@@ -102,7 +102,7 @@ class Cache
     public function set(string $file, string $content): void
     {
         $file = $this->path . self::DIR . $file;
-        $pos = strrpos($file, DIRECTORY_SEPARATOR);
+        $pos  = strrpos($file, DIRECTORY_SEPARATOR);
         if ($pos !== false) {
             $dir = substr($file, 0, $pos + 1);
             if (is_dir($dir) === false) {
@@ -129,7 +129,7 @@ class Cache
             throw new ZOEException(ZOEException::F0001, 'F0001');
         } else {
             return file_get_contents(
-                $this->path . self::DIR . $file . self::EXTENSION
+                    $this->path . self::DIR . $file . self::EXTENSION
             );
         }
     }
@@ -151,4 +151,5 @@ class Cache
             return unlink($this->path . self::DIR . $file . self::EXTENSION);
         }
     }
+
 }

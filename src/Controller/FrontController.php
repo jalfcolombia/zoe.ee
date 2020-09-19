@@ -142,47 +142,47 @@ class FrontController
     {
         $this->requestOptions();
         try {
-            $this->path = $path;
-            $this->scope = $scope;
-            $this->request = new Request();
+            $this->path     = $path;
+            $this->scope    = $scope;
+            $this->request  = new Request();
             $this->response = new Response($this->path);
-            $this->cache = new Cache($this->path);
-            $this->routing = new Routing(
-                $this->request->getServer('PATH_INFO'),
-                $this->cache,
-                $this->path,
-                $this->request->getServer('REQUEST_METHOD'),
-                $this->request->isAjax(),
-                $this->scope
+            $this->cache    = new Cache($this->path);
+            $this->routing  = new Routing(
+                    $this->request->getServer('PATH_INFO'),
+                    $this->cache,
+                    $this->path,
+                    $this->request->getServer('REQUEST_METHOD'),
+                    $this->request->isAjax(),
+                    $this->scope
             );
-            $this->config = new Config(
-                $this->cache,
-                $this->scope,
-                $this->path,
-                $this->routing->getBundle(),
-                $this->routing->getProject()
+            $this->config   = new Config(
+                    $this->cache,
+                    $this->scope,
+                    $this->path,
+                    $this->routing->getBundle(),
+                    $this->routing->getProject()
             );
-            $this->i18n = new i18n(
-                $this->config->get('lang'),
-                $this->scope,
-                $this->cache,
-                $this->path,
-                $this->routing->getBundle(),
-                $this->routing->getProject()
+            $this->i18n     = new i18n(
+                    $this->config->get('lang'),
+                    $this->scope,
+                    $this->cache,
+                    $this->path,
+                    $this->routing->getBundle(),
+                    $this->routing->getProject()
             );
-            $this->session = new Session(
-                $this->config->get('session.name'),
-                $this->config->get('session.time')
+            $this->session  = new Session(
+                    $this->config->get('session.name'),
+                    $this->config->get('session.time')
             );
         } catch (\ErrorException | \Exception $exc) {
             header("Content-type: application/json; charset=utf-8");
             http_response_code(500);
             $json_data = array(
-                'file' => $exc->getFile(),
-                'line' => $exc->getLine(),
-                'error' => $exc->getCode(),
+                'file'    => $exc->getFile(),
+                'line'    => $exc->getLine(),
+                'error'   => $exc->getCode(),
                 'message' => $exc->getMessage(),
-                'trace' => $exc->getTrace()
+                'trace'   => $exc->getTrace()
             );
             echo json_encode($json_data);
             exit();
@@ -222,13 +222,13 @@ class FrontController
             if ($this->request->isAjax() === true) {
                 header('Content-type: application/json; charset=utf-8');
                 echo json_encode(
-                    array(
-                        'File' => $exc->getFile(),
-                        'Line' => $exc->getLine(),
-                        'Error' => $exc->getCode(),
-                        'Message' => $exc->getMessage(),
-                        'Trace' => $exc->getTrace()
-                    )
+                        array(
+                            'File'    => $exc->getFile(),
+                            'Line'    => $exc->getLine(),
+                            'Error'   => $exc->getCode(),
+                            'Message' => $exc->getMessage(),
+                            'Trace'   => $exc->getTrace()
+                        )
                 );
                 // exit();
             } else {
@@ -256,21 +256,21 @@ class FrontController
         if (is_string($middleware) === true) {
             eval("\$middleware = new \\{$middleware}(\$this->cache);");
             $middleware->main(
-                $this->request,
-                $this->i18n,
-                $this->config,
-                $this->session,
-                $this->routing
-            );
-        } elseif (is_array($middleware) === true) {
-            foreach ($middleware as $mddlwr) {
-                eval("\$mddlwr = new \\{$mddlwr}(\$this->cache);");
-                $mddlwr->main(
                     $this->request,
                     $this->i18n,
                     $this->config,
                     $this->session,
                     $this->routing
+            );
+        } elseif (is_array($middleware) === true) {
+            foreach ($middleware as $mddlwr) {
+                eval("\$mddlwr = new \\{$mddlwr}(\$this->cache);");
+                $mddlwr->main(
+                        $this->request,
+                        $this->i18n,
+                        $this->config,
+                        $this->session,
+                        $this->routing
                 );
             }
         } else {
@@ -289,19 +289,19 @@ class FrontController
         $this->controller = $this->routing->getController();
         if ($this->routing->getAction() === null) {
             $this->controller->main(
-                $this->request,
-                $this->i18n,
-                $this->config,
-                $this->session,
-                $this->routing
+                    $this->request,
+                    $this->i18n,
+                    $this->config,
+                    $this->session,
+                    $this->routing
             );
         } else {
             $this->controller->{$this->routing->getAction()}(
-                $this->request,
-                $this->i18n,
-                $this->config,
-                $this->session,
-                $this->routing
+                    $this->request,
+                    $this->i18n,
+                    $this->config,
+                    $this->session,
+                    $this->routing
             );
         }
     }
@@ -314,9 +314,9 @@ class FrontController
     private function response(): void
     {
         $this->response
-            ->setVariables((array) $this->controller)
-            ->setView((($this->routing->hasView()) ? $this->routing->getView() : $this->controller->getView()))
-            ->render($this->getPathView());
+                ->setVariables((array) $this->controller)
+                ->setView((($this->routing->hasView()) ? $this->routing->getView() : $this->controller->getView()))
+                ->render($this->getPathView());
     }
 
     /**

@@ -121,7 +121,6 @@ class Request
             } else {
                 $this->{$type_request} = array_merge((array) $this->{$type_request}, (array) $tmp_data);
             }
-            
         }
 
         // print_r($this->{$type_request}); exit();
@@ -391,7 +390,7 @@ class Request
     {
         return ($this->hasFile($file) === true) ? $this->file[$file] : null;
     }
-    
+
     /**
      * Obtiene el arreglo de los archivos que procden de la
      * petición al sistema

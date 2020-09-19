@@ -135,17 +135,18 @@ class Config
      * @param string $project      [opcional] Nombre del proyecto a procesar
      */
     public function __construct(
-        Cache $cache,
-        string $scope,
-        string $path_project,
-        string $bundle,
-        ?string $project = null
-    ) {
-        $this->scope = $scope;
-        $this->bundle = $bundle . DIRECTORY_SEPARATOR;
+            Cache $cache,
+            string $scope,
+            string $path_project,
+            string $bundle,
+            ?string $project = null
+    )
+    {
+        $this->scope        = $scope;
+        $this->bundle       = $bundle . DIRECTORY_SEPARATOR;
         $this->path_project = $path_project;
-        $this->project = $project;
-        $this->helper = new Helper($cache);
+        $this->project      = $project;
+        $this->helper       = new Helper($cache);
     }
 
     /**
@@ -159,9 +160,9 @@ class Config
     public function get(string $param)
     {
         $answer = null;
-        $key = "['" . str_replace('.', "']['", $param) . "']";
-        $eval = '$answer = (isset($this->getConfig()' . $key . ')) ';
-        $eval .= '? $this->getConfig()' . $key . ' : null;';
+        $key    = "['" . str_replace('.', "']['", $param) . "']";
+        $eval   = '$answer = (isset($this->getConfig()' . $key . ')) ';
+        $eval   .= '? $this->getConfig()' . $key . ' : null;';
         eval($eval);
         return $answer;
     }
@@ -182,72 +183,73 @@ class Config
     protected function getConfig(): array
     {
         $data = array(
-            Helper::GLODAL => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_CONFIG
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_CONFIG . self::CACHE,
+            Helper::GLODAL         => array(
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_CONFIG
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_CONFIG . self::CACHE,
                 Helper::FILE_CACHE => self::DIR_CONFIG . self::CACHE
             ),
-            Helper::BUNDLE => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_CONFIG
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_CONFIG . self::CACHE,
+            Helper::BUNDLE         => array(
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_CONFIG
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_CONFIG . self::CACHE,
                 Helper::FILE_CACHE => self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_CONFIG
-                    . self::CACHE
+                . $this->bundle
+                . self::DIR_CONFIG
+                . self::CACHE
             ),
-            Helper::PROJECT => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_CONFIG
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_CONFIG
-                    . self::CACHE,
+            Helper::PROJECT        => array(
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_CONFIG
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_CONFIG
+                . self::CACHE,
                 Helper::FILE_CACHE => self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_CONFIG
-                    . self::CACHE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_CONFIG
+                . self::CACHE
             ),
             Helper::PROJECT_BUNDLE => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_CONFIG
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_CONFIG
-                    . self::CACHE,
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_CONFIG
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_CONFIG
+                . self::CACHE,
                 Helper::FILE_CACHE => self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_CONFIG
-                    . self::CACHE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_CONFIG
+                . self::CACHE
             )
         );
         return $this->helper->getSerialFiles($data, $this->scope, $this->project);
     }
+
 }

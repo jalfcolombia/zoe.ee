@@ -46,7 +46,7 @@ class Helper
     /**
      * Indica el nivel global de un archivo de configuración
      */
-    public const GLODAL  = 0;
+    public const GLODAL = 0;
 
     /**
      * Indica en nivel del la configuraicón del Bundle
@@ -131,29 +131,29 @@ class Helper
         /* [INICIO] Averigua la llave en APCu */
         if (is_file($data[self::GLODAL][self::FILE_YAML]) === false) {
             throw new ZOEException(
-                ZOEException::F0003_MESSAGE,
-                ZOEException::F0003_CODE
+                    ZOEException::F0003_MESSAGE,
+                    ZOEException::F0003_CODE
             );
         }
-        $key = $data[self::GLODAL][self::APCU_KEY];
+        $key        = $data[self::GLODAL][self::APCU_KEY];
         $file_cache = $data[self::GLODAL][self::FILE_CACHE];
-        $flag = 1;
+        $flag       = 1;
         if ($project !== null) {
             if (is_file($data[self::PROJECT][self::FILE_YAML]) === true) {
-                $key = $data[self::PROJECT][self::APCU_KEY];
+                $key        = $data[self::PROJECT][self::APCU_KEY];
                 $file_cache = $data[self::PROJECT][self::FILE_CACHE];
-                $flag += 2; // 3
+                $flag       += 2; // 3
             }
             if (is_file($data[self::PROJECT_BUNDLE][self::FILE_YAML]) === true) {
-                $key = $data[self::PROJECT_BUNDLE][self::APCU_KEY];
+                $key        = $data[self::PROJECT_BUNDLE][self::APCU_KEY];
                 $file_cache = $data[self::PROJECT_BUNDLE][self::FILE_CACHE];
-                $flag += 3; // 4 | 6
+                $flag       += 3; // 4 | 6
             }
         } else {
             if (is_file($data[self::BUNDLE][self::FILE_YAML]) === true) {
-                $key = $data[self::BUNDLE][self::APCU_KEY];
+                $key        = $data[self::BUNDLE][self::APCU_KEY];
                 $file_cache = $data[self::BUNDLE][self::FILE_CACHE];
-                $flag += 1; // 2
+                $flag       += 1; // 2
             }
         }
         /* [FIN] Averigua la llave en APCu */
@@ -165,71 +165,71 @@ class Helper
                     break;
                 case 2:
                     return array_merge(
-                        Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                        Yaml::parseFile($data[self::BUNDLE][self::FILE_YAML])
+                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                            Yaml::parseFile($data[self::BUNDLE][self::FILE_YAML])
                     );
                     break;
                 case 3:
                     return array_merge(
-                        Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                        Yaml::parseFile($data[self::PROJECT][self::FILE_YAML])
+                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                            Yaml::parseFile($data[self::PROJECT][self::FILE_YAML])
                     );
                     break;
                 case 4:
                     return array_merge(
-                        Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                        Yaml::parseFile($data[self::PROJECT_BUNDLE][self::FILE_YAML])
+                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                            Yaml::parseFile($data[self::PROJECT_BUNDLE][self::FILE_YAML])
                     );
                     break;
                 case 6:
                     return array_merge(
-                        Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                        Yaml::parseFile($data[self::PROJECT][self::FILE_YAML]),
-                        Yaml::parseFile($data[self::PROJECT_BUNDLE][self::FILE_YAML])
+                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                            Yaml::parseFile($data[self::PROJECT][self::FILE_YAML]),
+                            Yaml::parseFile($data[self::PROJECT_BUNDLE][self::FILE_YAML])
                     );
                     break;
             }
         } elseif ($scope === FrontController::PROD) {
             if ($this->cache->has($file_cache) === true
-                and apcu_exists($key) === false
+                    and apcu_exists($key) === false
             ) {
                 apcu_add(
-                    $key,
-                    (array) json_decode($this->cache->get($file_cache), true)
+                        $key,
+                        (array) json_decode($this->cache->get($file_cache), true)
                 );
             } else {
                 $cache = array();
                 switch ($flag) {
                     case 1:
                         $cache = Yaml::parseFile(
-                            $data[self::GLODAL][self::FILE_YAML]
+                                        $data[self::GLODAL][self::FILE_YAML]
                         );
                         break;
                     case 2:
                         $cache = array_merge(
-                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                            Yaml::parseFile($data[self::BUNDLE][self::FILE_YAML])
+                                Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                                Yaml::parseFile($data[self::BUNDLE][self::FILE_YAML])
                         );
                         break;
                     case 3:
                         $cache = array_merge(
-                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                            Yaml::parseFile($data[self::PROJECT][self::FILE_YAML])
+                                Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                                Yaml::parseFile($data[self::PROJECT][self::FILE_YAML])
                         );
                         break;
                     case 4:
                         $cache = array_merge(
-                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                            Yaml::parseFile(
-                                $data[self::PROJECT_BUNDLE][self::FILE_YAML]
-                            )
+                                Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                                Yaml::parseFile(
+                                        $data[self::PROJECT_BUNDLE][self::FILE_YAML]
+                                )
                         );
                         break;
                     case 6:
                         $cache = array_merge(
-                            Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
-                            Yaml::parseFile($data[self::PROJECT][self::FILE_YAML]),
-                            Yaml::parseFile($data[self::PROJECT_BUNDLE][self::FILE_YAML])
+                                Yaml::parseFile($data[self::GLODAL][self::FILE_YAML]),
+                                Yaml::parseFile($data[self::PROJECT][self::FILE_YAML]),
+                                Yaml::parseFile($data[self::PROJECT_BUNDLE][self::FILE_YAML])
                         );
                         break;
                 }
@@ -239,4 +239,5 @@ class Helper
             return apcu_fetch($key);
         }
     }
+
 }

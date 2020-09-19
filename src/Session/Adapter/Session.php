@@ -192,4 +192,5 @@ class Session
         $this->set('id_current_user', $id);
         return $this;
     }
+
 }

@@ -39,6 +39,7 @@ class Session
 {
 
     private const ID_CURRENT_USER = 'id_current_user';
+
     private $redis;
     private $name;
     private $id;

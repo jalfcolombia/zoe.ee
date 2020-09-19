@@ -96,9 +96,7 @@ class i18n
      * @var string
      */
     private $language;
-
     private $project;
-
     private $helper;
 
     /**
@@ -112,20 +110,21 @@ class i18n
      * @param string|null $project      [opcional] Nombre del projecto a usar en el controlador frontal
      */
     public function __construct(
-        string $language,
-        string $scope,
-        Cache $cache,
-        string $path_project,
-        string $bundle,
-        ?string $project = null
-    ) {
-        $this->language = $language;
-        $this->cache = $cache;
-        $this->scope = $scope;
-        $this->bundle = $bundle . DIRECTORY_SEPARATOR;
+            string $language,
+            string $scope,
+            Cache $cache,
+            string $path_project,
+            string $bundle,
+            ?string $project = null
+    )
+    {
+        $this->language     = $language;
+        $this->cache        = $cache;
+        $this->scope        = $scope;
+        $this->bundle       = $bundle . DIRECTORY_SEPARATOR;
         $this->path_project = $path_project;
-        $this->project = $project; // ($project !== null) ? $project . DIRECTORY_SEPARATOR : null;
-        $this->helper = new Helper($cache);
+        $this->project      = $project; // ($project !== null) ? $project . DIRECTORY_SEPARATOR : null;
+        $this->helper       = new Helper($cache);
     }
 
     /**
@@ -175,79 +174,80 @@ class i18n
     protected function getDictionary(): array
     {
         $data = array(
-            Helper::GLODAL => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_I18N
-                    . $this->language
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_I18N
-                    . $this->language,
+            Helper::GLODAL         => array(
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_I18N
+                . $this->language
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_I18N
+                . $this->language,
                 Helper::FILE_CACHE => self::DIR_I18N
-                    . $this->language
+                . $this->language
             ),
-            Helper::BUNDLE => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_I18N
-                    . $this->language
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_I18N
-                    . $this->language,
+            Helper::BUNDLE         => array(
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_I18N
+                . $this->language
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_I18N
+                . $this->language,
                 Helper::FILE_CACHE => self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_I18N
-                    . $this->language
+                . $this->bundle
+                . self::DIR_I18N
+                . $this->language
             ),
-            Helper::PROJECT => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_I18N
-                    . $this->language
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_I18N
-                    . $this->language,
+            Helper::PROJECT        => array(
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_I18N
+                . $this->language
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_I18N
+                . $this->language,
                 Helper::FILE_CACHE => self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_I18N
-                    . $this->language
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_I18N
+                . $this->language
             ),
             Helper::PROJECT_BUNDLE => array(
-                Helper::FILE_YAML => $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_I18N
-                    . $this->language
-                    . self::YAML,
-                Helper::APCU_KEY => self::NAME_CACHE
-                    . $this->path_project
-                    . self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_I18N
-                    . $this->language,
+                Helper::FILE_YAML  => $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_I18N
+                . $this->language
+                . self::YAML,
+                Helper::APCU_KEY   => self::NAME_CACHE
+                . $this->path_project
+                . self::DIR_BUNDLE
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_I18N
+                . $this->language,
                 Helper::FILE_CACHE => self::DIR_BUNDLE
-                    . $this->project . DIRECTORY_SEPARATOR
-                    . self::DIR_BUNDLE
-                    . $this->bundle
-                    . self::DIR_I18N
-                    . $this->language
+                . $this->project . DIRECTORY_SEPARATOR
+                . self::DIR_BUNDLE
+                . $this->bundle
+                . self::DIR_I18N
+                . $this->language
             )
         );
         return $this->helper->getSerialFiles($data, $this->scope, $this->project);
     }
+
 }

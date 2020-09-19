@@ -81,7 +81,7 @@ abstract class Controller
     public function __construct(Cache $cache)
     {
         $this->cache = $cache;
-        $this->view = null;
+        $this->view  = null;
     }
 
     /**
@@ -153,4 +153,5 @@ abstract class Controller
     {
         return http_response_code();
     }
+
 }

@@ -37,6 +37,7 @@ namespace ZoeEE\Session\Adapter;
  */
 class Redis
 {
+
     private $redis;
     private $name;
     private $time;
@@ -50,8 +51,8 @@ class Redis
     public function __construct(string $name, int $time = 3600)
     {
         $this->setName($name);
-        $this->time = time(NULL) + $time;
-        $this->redis = new Redis();
+        $this->time  = time(NULL) + $time;
+        $this->redis = new \Redis();
         $this->redis->connect('localhost', 6379, 10);
     }
 
@@ -166,7 +167,7 @@ class Redis
      */
     public function start(int $time): Session
     {
-        $this->time = time(NULL) + $time;
+        $this->time  = time(NULL) + $time;
         $this->redis = new Redis();
         $this->redis->connect('localhost', 6379, 10);
         return $this;
@@ -209,4 +210,5 @@ class Redis
         $this->set('id_current_user', $id);
         return $this;
     }
+
 }

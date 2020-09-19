@@ -26,7 +26,7 @@
 
 namespace ZoeEE\Response;
 
- /**
+/**
  * Clase para manejar la respuesta al cliente
  *
  * @category Response
@@ -73,9 +73,9 @@ class Response
      */
     public function __construct(string $path, string $view = null, array $variables = array())
     {
-        $this->path = $path;
+        $this->path      = $path;
         $this->variables = $variables;
-        $this->view = $view;
+        $this->view      = $view;
     }
 
     /**
@@ -123,11 +123,12 @@ class Response
         } elseif (\strtolower($this->view) === 'json' and isset($json_data) === false) {
             // DISPARA ERROR DE QUE NO EXISTE $json_data
         } elseif (is_file($this->path . self::DIR . $bundle . $this->view . '.template.php') === true and
-            $bundle !== null
+                $bundle !== null
         ) {
             require $this->path . self::DIR . $bundle . $this->view . '.template.php';
         } else {
             require $this->path . self::DIR . $this->view . '.template.php';
         }
     }
+
 }

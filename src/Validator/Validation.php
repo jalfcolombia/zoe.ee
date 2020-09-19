@@ -65,7 +65,7 @@ class Validation extends Validator
      */
     public function newValidation(string $name, $value = null): Validation
     {
-        $this->name = $name;
+        $this->name        = $name;
         $this->form[$name] = array(
             'value' => $value
         );
@@ -82,7 +82,7 @@ class Validation extends Validator
     public function isNumber(string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::IS_NUMBER,
+            'type'    => self::IS_NUMBER,
             'message' => $error_message
         );
         return $this;
@@ -99,8 +99,8 @@ class Validation extends Validator
     public function isEqual($other_value, string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::IS_EQUAL,
-            'message' => $error_message,
+            'type'       => self::IS_EQUAL,
+            'message'    => $error_message,
             'otherValue' => $other_value
         );
         return $this;
@@ -117,8 +117,8 @@ class Validation extends Validator
     public function isNotEqual($other_value, string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::IS_NOT_EQUAL,
-            'message' => $error_message,
+            'type'       => self::IS_NOT_EQUAL,
+            'message'    => $error_message,
             'otherValue' => $other_value
         );
         return $this;
@@ -135,7 +135,7 @@ class Validation extends Validator
     public function pattern(string $pattern, string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::PATTERN,
+            'type'    => self::PATTERN,
             'message' => $error_message,
             'pattern' => $pattern
         );
@@ -152,7 +152,7 @@ class Validation extends Validator
     public function isEmail(string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::IS_EMAIL,
+            'type'    => self::IS_EMAIL,
             'message' => $error_message
         );
         return $this;
@@ -168,7 +168,7 @@ class Validation extends Validator
     public function isNull(string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::IS_NULL,
+            'type'    => self::IS_NULL,
             'message' => $error_message
         );
         return $this;
@@ -184,7 +184,7 @@ class Validation extends Validator
     public function isNotNull(string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::IS_NOT_NULL,
+            'type'    => self::IS_NOT_NULL,
             'message' => $error_message
         );
         return $this;
@@ -201,9 +201,9 @@ class Validation extends Validator
     public function existsInDataBase(string $error_message, bool $answer): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::EXISTS_IN_DATABASE,
+            'type'    => self::EXISTS_IN_DATABASE,
             'message' => $error_message,
-            'answer' => $answer
+            'answer'  => $answer
         );
         return $this;
     }
@@ -219,9 +219,9 @@ class Validation extends Validator
     public function booleanTrue(string $error_message, bool $answer): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::BOOLEAN_TRUE,
+            'type'    => self::BOOLEAN_TRUE,
             'message' => $error_message,
-            'answer' => $answer
+            'answer'  => $answer
         );
         return $this;
     }
@@ -237,9 +237,9 @@ class Validation extends Validator
     public function booleanFalse(string $error_message, bool $answer): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::BOOLEAN_FALSE,
+            'type'    => self::BOOLEAN_FALSE,
             'message' => $error_message,
-            'answer' => $answer
+            'answer'  => $answer
         );
         return $this;
     }
@@ -256,10 +256,10 @@ class Validation extends Validator
     public function custom(string $error_message, object $class, array $params = array()): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::CUSTOM,
+            'type'    => self::CUSTOM,
             'message' => $error_message,
-            'params' => $params,
-            'class' => $class
+            'params'  => $params,
+            'class'   => $class
         );
         return $this;
     }
@@ -275,8 +275,8 @@ class Validation extends Validator
     public function minLength(int $lenght, string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::MIN_LENGTH,
-            'message' => $error_message,
+            'type'      => self::MIN_LENGTH,
+            'message'   => $error_message,
             'minlength' => $lenght
         );
         return $this;
@@ -293,8 +293,8 @@ class Validation extends Validator
     public function maxLength(int $length, string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::MAX_LENGTH,
-            'message' => $error_message,
+            'type'      => self::MAX_LENGTH,
+            'message'   => $error_message,
             'maxlength' => $length
         );
         return $this;
@@ -311,8 +311,8 @@ class Validation extends Validator
     public function existsInTheUniverse(array $universe, string $error_message): Validation
     {
         $this->form[$this->name][] = array(
-            'type' => self::EXISTS_IN_THE_UNIVERSE,
-            'message' => $error_message,
+            'type'     => self::EXISTS_IN_THE_UNIVERSE,
+            'message'  => $error_message,
             'universe' => $universe
         );
         return $this;
